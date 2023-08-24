@@ -1,0 +1,3029 @@
+@using Syncfusion.Blazor.Buttons
+@using System.Collections.Generic
+@using Syncfusion.Blazor.DropDowns
+@using Syncfusion.Blazor.Inputs
+@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor.Diagram
+@using Syncfusion.Blazor.Popups
+@using System.Collections.ObjectModel
+@using Syncfusion.Blazor.SplitButtons
+@using Newtonsoft.Json.Linq
+@using System.Drawing
+
+
+@using BPMNEditor.Shared
+@namespace BPMNEditor
+
+<div id="generalDiagramContainer" class="db-general-diagram-prop-container" >
+    <div id='diagramPropertyContainer' class="db-diagram-prop-container" style="display:@DiagramPropertyVisibility" >
+        <div class="row db-prop-header-text">
+            Page Settings
+                <SfButton ID="closeIconBtn"  CssClass="close" IconCss="sf-icon-Close" @onclick="@PropertyPanelHideButton"></SfButton>         
+        </div>
+        <div class="db-prop-separator" style="margin-bottom:15px; background-color:#b5b5b5"></div>
+        <div class="db-prop-text-style">
+            Format
+        </div>
+        <div class="row db-prop-row">
+            <SfDropDownList TValue="string" TItem="PaperListFields" PopupHeight="230px" Width="100%" DataSource="@PaperList" @bind-Value="@PaperListValue">
+                <DropDownListFieldSettings Text="Text" Value="Value"></DropDownListFieldSettings>
+                <DropDownListEvents TValue="string" TItem="PaperListFields" ValueChange="@OnPaperListValueChange"></DropDownListEvents>
+            </SfDropDownList>
+        </div>
+        <div class="row db-prop-row" id='pageDimension' style="display:@PageDimensionVisibility">
+            <div class="col-xs-6 db-col-left" >
+                <div class="db-text-container">
+                    <div class="db-text">
+                        <span>W</span>
+                    </div>
+                    <div class="db-text-input">
+                        <SfNumericTextBox Value="@PageWidth" Width="95px" ID="pageWidth" ValidateDecimalOnType="true" Decimals=0 Format="n0">
+                            <NumericTextBoxEvents TValue="double" ValueChange="@OnPageWidthChange"></NumericTextBoxEvents>
+                        </SfNumericTextBox>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-6 db-col-right">
+                <div class="db-text-container">
+                    <div class="db-text">
+                        <span>H</span>
+                    </div>
+                    <div class="db-text-input">
+                        <SfNumericTextBox Value="@PageHeight" Width="95px" ID="pageHeight" ValidateDecimalOnType="true" Decimals=0 Format="n0">
+                            <NumericTextBoxEvents TValue="double" ValueChange="@OnPageHeightChange"></NumericTextBoxEvents>
+                        </SfNumericTextBox>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" id="pageOrientation" style="display:@PageOrientationVisibility">
+            <div class="row db-prop-row">
+                <div class="col-xs-6 db-col-right">
+                    <span class="db-prop-text-style">Orientation</span>
+                </div>
+             </div>
+            <div class="row db-prop-row">
+                <div class="col-xs-6 db-col-left" >
+                <SfButton CssClass="@portraitStyleClass" style="font-size: 12px;" ID="portraitIconBtn" @onclick="@OnPagePortraitChange" IconCss="sf-icon-portrait">Portrait</SfButton>
+                   
+                </div>
+            <div class="col-xs-6 db-col-right" >
+                <SfButton CssClass="@landscapeStyleClass" style="font-size: 12px;" ID="landscapeIconBtn" @onclick="@OnPageLandscapeChange" IconCss="sf-icon-landscape"> Landscape</SfButton>
+                   
+                </div>
+            </div>
+        </div>
+        
+        <div class="row db-prop-row" style="margin-top:10px">
+            <div class="db-prop-text-style" style="margin-top:5px">
+                Background
+            </div>
+            <div class="row">
+                <div class="col-xs-6 db-col-left" style="margin-top:3px">
+                    <SfColorPicker ID="pageBgColor" Mode="ColorPickerMode.Palette" Width="100%" Value="@PageBgColorValue" ShowButtons="false" ValueChange="@OnPageBgColorChange"></SfColorPicker>
+                </div>
+            </div>
+        </div>
+        <div class="row db-prop-row" style="margin-top:10px">
+            <SfCheckBox ID="showPageBreaks" Label="Page Breaks" @bind-Checked="@ShowPageBreaksValue" @onchange="@OnShowPageBreaksChange"></SfCheckBox>
+        </div>
+    </div>
+    <div id='nodePropertyContainer' class="@nodePanelClass" style="display:@NodePropertyVisibility">
+        <div class="db-node-behaviour-prop">
+            <div class="row db-prop-header-text">
+                Shape Properties
+                  <SfButton ID="closeIconBtn"  CssClass="close" IconCss="sf-icon-Close" @onclick="@PropertyPanelHideButton"></SfButton>
+            </div>
+            <div class="db-prop-separator"></div>
+            <div class="db-prop-text-style">
+                Dimensions
+            </div>
+            <div class="row db-prop-row">
+                <div class="col-xs-6 db-col-left" style="width:97px">
+                    <div class="db-text-container">                 
+                        <div class="db-text">
+                            <span>X</span>
+                        </div>
+                        <div class="db-text-input">
+                            <SfNumericTextBox Value="@NodeOffsetX" Width="72px" ID="nodeOffsetX" ValidateDecimalOnType="true" Decimals=0 Format="n0">
+                                <NumericTextBoxEvents TValue="double" ValueChange="@OnNodeOffsetXChange"></NumericTextBoxEvents>
+                            </SfNumericTextBox>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6 db-col-right" style="width:97px">
+                    <div class="db-text-container">
+                        <div class="db-text">
+                            <span>Y</span>
+                        </div>
+                        <div class="db-text-input">
+                            <SfNumericTextBox Value="@NodeOffsetY" Width="72px" ID="nodeOffsetY" ValidateDecimalOnType="true" Decimals=0 Format="n0">
+                                <NumericTextBoxEvents TValue="double" ValueChange="@OnNodeOffsetYChange"></NumericTextBoxEvents>
+                            </SfNumericTextBox>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row db-prop-row">
+                <div class="col-xs-6 db-col-left"style="width:97px">
+                    <div class="db-text-container">
+                        <div class="db-text">
+                            <span>W</span>
+                        </div>
+                        <div class="db-text-input">
+                            <SfNumericTextBox Value="@NodeWidth" Width="72px" ID="nodeWidth" Min="1" ValidateDecimalOnType="true" Decimals=0 Format="n0">
+                                <NumericTextBoxEvents TValue="double" ValueChange="@OnNodeWidthChange"></NumericTextBoxEvents>
+                            </SfNumericTextBox>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6 db-col-right" style="width:97px">
+                    <div class="db-text-container">
+                        <div class="db-text">
+                            <span>H</span>
+                        </div>
+                        <div class="db-text-input">
+                            <SfNumericTextBox Value="@NodeHeight" Width="72px" ID="nodeHeight" Min="1" ValidateDecimalOnType="true" Decimals=0 Format="n0">
+                                <NumericTextBoxEvents TValue="double" ValueChange="@OnNodeHeightChange"></NumericTextBoxEvents>
+                            </SfNumericTextBox>
+                        </div>
+                    </div>
+                </div>      
+                 <div class="col-xs-2 db-col-left" style="width:20px;padding-left:7px;height: 26px">
+                    <SfButton CssClass="@aspectRatioCssClass" IconCss="@AspectRatioIcon" @onclick="@OnChangeAspectRatio" HtmlAttributes="@primButton"></SfButton>
+                </div>
+            </div>           
+            <div class="row db-prop-row">
+                <div class="col-xs-6 db-col-left" style="width:97px">
+                     <div class="db-text-container">
+                        <div class="db-text">
+                            <SfButton ID="rotateIconBtn" CssClass="e-aspectRatioBtn e-flat" IconCss="sf-icon-rotate"></SfButton>
+                        </div>
+                        <div class="db-text-input">
+                            <SfNumericTextBox ID="nodeRotateAngle" Width= "72px" Format="n0" ValidateDecimalOnType="true" Decimals=0 @bind-Value="@NodeRotateAngle">
+                                <NumericTextBoxEvents TValue="double" ValueChange="@OnNodeRotateAngleChange"></NumericTextBoxEvents>
+                            </SfNumericTextBox>
+                        </div>
+                    </div>
+                </div>
+                 
+            </div>
+            <div class="db-prop-separator"></div>            
+            <div class="row db-prop-row">
+                <div class="col-xs-6 db-col-left">
+                    <SfButton IsPrimary="true" CssClass="e-outline" style="font-size:10px" @onclick="@InsertLink" TooltipText="Insert Link">INSERT LINK</SfButton>
+                </div>               
+            </div>
+            <div class="db-prop-separator">
+            </div>
+        </div>
+        <div id='nodeStyleProperties' class="db-node-style-prop">
+            <div class="row db-background-style">
+                <div class="db-prop-text-style">
+                    Background Type
+                </div>
+                <div class="row db-prop-row">
+                    <div class="col-xs-12 db-col-left">
+                        <SfDropDownList TValue="string" TItem="BackgroundType" PopupHeight="230px" @bind-DataSource="@BackgroundTypes" @bind-Value="@BackgroundValue">
+                            <DropDownListFieldSettings Text="Text" Value="Value"></DropDownListFieldSettings>
+                            <DropDownListEvents TItem="BackgroundType" TValue="string" ValueChange="@OnBackgroundTypeChange"></DropDownListEvents>
+                        </SfDropDownList>
+                    </div>
+                </div>
+                <div class="row db-prop-row" style="width:100%">                   
+                    <div id='@gradientStyleId' class="@gradientStyleClass" style="@gradientVisibility">
+                         <div class="col-xs-6 db-col-left" style="width:84px">
+                            <SfColorPicker ID="nodeFillColor" Mode="ColorPickerMode.Palette" Value="@NodeFillColor" ValueChange="@OnFillColorChange" ShowButtons="false"></SfColorPicker>
+                        </div>  
+                        <div class="col-xs-2 db-col-center" style="width:50px;margin-left:5px">
+                            <SfDropDownButton IconCss="sf-icon-gradient-alignemnt">
+                                <DropDownButtonEvents ItemSelected="@OnGradientDirectionChange">
+                                </DropDownButtonEvents>
+                                <DropDownMenuItems>
+                                    <DropDownMenuItem IconCss="sf-icon-arrow-up" Text="Bottom To Top"></DropDownMenuItem>
+                                    <DropDownMenuItem IconCss="sf-icon-arrow-down" Text="Top To Bottom"></DropDownMenuItem>
+                                    <DropDownMenuItem IconCss="sf-icon-arrow-left" Text="Right To Left"></DropDownMenuItem>
+                                    <DropDownMenuItem IconCss="sf-icon-arrow-right" Text="Left To Right"></DropDownMenuItem>
+                                </DropDownMenuItems>
+                            </SfDropDownButton>                        
+                        </div>
+                        <div class="col-xs-4 db-col-right" style="margin-left: 5px;width:87px">
+                            <SfColorPicker ID="nodeGradientColor" Mode="ColorPickerMode.Palette" Value="@NodeGradientColor" ValueChange="@OnNodeGradientColorChange" ShowButtons="false"></SfColorPicker>
+                        </div>
+                    </div>
+                </div>
+            </div>                        
+            <div class="row db-border-style">
+                    <div class="row db-prop-header-text db-border-style-header">
+                    Border/Line Styles
+                      <SfButton ID="closeIconBtn"  CssClass="close" IconCss="sf-icon-Close" @onclick="@PropertyPanelHideButton"></SfButton>
+                    </div>
+                    <div class="db-prop-separator"></div>
+                <div class="row db-prop-row" style="width:100%">
+                    <div class="col-xs-6 db-col-right">
+                        <span class="db-prop-text-style">Border Type</span>
+                    </div>
+                    <div class="col-xs-2 db-col-center" style="margin-left: -21px; ">
+                        <span class="db-prop-text-style">Color</span>
+                    </div>
+                    <div class="col-xs-2 db-col-left" style="margin-left: 14px">
+                        <span class="db-prop-text-style">Thickness</span>
+                    </div>
+                </div>
+                <div class="row db-prop-row">
+                    <div class="col-xs-6 db-col-left" style="width:90px">
+                        <SfDropDownList TValue="string" TItem="BorderStylesFields" PopupWidth="160px" Index="@NodeStrokeStyle" DataSource="@BorderStyles">
+                            <DropDownListTemplates TItem="BorderStylesFields">
+                                <ItemTemplate>
+                                    <div class='db-ddl-template-style'>
+                                        <span class=@((context as BorderStylesFields).ClassName)></span>
+                                    </div>
+                                </ItemTemplate>
+                                <ValueTemplate>
+                                    <div class='db-ddl-template-style'>
+                                        <span class=@((context as BorderStylesFields).ClassName)></span>
+                                    </div>
+                                </ValueTemplate>
+                            </DropDownListTemplates>
+                            <DropDownListFieldSettings Text="Text" Value="Value"></DropDownListFieldSettings>
+                            <DropDownListEvents TValue="string" TItem="BorderStylesFields" ValueChange="@OnStrokeDashArrayChange"></DropDownListEvents>
+                        </SfDropDownList>
+                    </div>
+                    <div class="col-xs-2 db-col-center" >
+                        <div style="width:50px;margin-left:3px">
+                            <SfColorPicker ID="nodeStrokeColor" Mode="ColorPickerMode.Palette" Value="@NodeStrokeColor" ValueChange="@OnStrokeColorChange" ShowButtons="false"></SfColorPicker>
+                        </div>
+                    </div>
+                    <div class="col-xs-4 db-col-center" style="width:70px;margin-left: 20px">
+                        <div class="db-text-input">
+                            <SfNumericTextBox ID="nodeStrokeWidth" Min="0" Step="1" ValidateDecimalOnType="true" Decimals=0 Format="###.##"  Value="@NodeStrokeWidth">
+                                <NumericTextBoxEvents TValue="double" ValueChange="@OnStrokeWidthChange"></NumericTextBoxEvents>
+                            </SfNumericTextBox>
+                        </div>
+                    </div>
+                </div>
+                <div class="row db-prop-row">
+                    <div class="col-xs-2 db-col-right db-prop-text-style" style="margin-right: 15px;padding-top: 6px">
+                        <span class="db-prop-text-style">Opacity</span>
+                    </div>
+                    <div class="col-xs-8 db-col-left" style="padding-right:10px">
+                        <SfSlider @ref="SfSlide" ID="nodeOpacitySlider" Type="SliderType.MinRange" @bind-Value="@NodeOpacity" Min="0" Max="100" Step="10">
+                            <SliderEvents TValue="double" OnChange="@(e => { OnNodeOpacityChange(e.Value); })" ></SliderEvents>
+                        </SfSlider>
+                    </div>
+                    <div class="col-xs-2 db-col-right" style="margin-left: -15px;padding-left: 8px">
+                        <input id="nodeOpacitySliderText" type="text" value="@NodeOpacity" readOnly="readonly" class="db-readonly-input" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id='connectorPropertyContainer' class="db-connector-prop-container" style="display:@ConnectorPropertyVisibility">
+        <div class="row db-prop-header-text">
+            Connector Properties
+              <SfButton ID="closeIconBtn"  CssClass="close" IconCss="sf-icon-Close" @onclick="@PropertyPanelHideButton"></SfButton>
+        </div>
+        <div class="db-prop-separator"></div>
+        <div class="row db-prop-row">
+            <div class="col-xs-6 db-col-left db-prop-text-style">
+                <span class="db-prop-text-style">Connector Type</span>
+            </div>
+            <div class="col-xs-4 db-col-left db-prop-text-style" style="margin-left:20px">
+                <span class="db-prop-text-style">Color</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-6 db-col-left">
+                <SfDropDownList ID="lineTypeDropdown" TValue="string" TItem="LineTypeFields" PopupHeight="230px" DataSource="@LineType" @bind-Value="@ConnectorType">
+                    <DropDownListFieldSettings Text="Text" Value="Value"></DropDownListFieldSettings>
+                    <DropDownListEvents TValue="string" TItem="LineTypeFields" ValueChange="@OnConnectorTypeChange"></DropDownListEvents>
+                </SfDropDownList>
+            </div>
+            <div class="col-xs-4 db-col-left" style="margin-left:20px">
+                <div>
+                    <div>
+                        <SfColorPicker ID="lineColor" Mode="ColorPickerMode.Palette" @bind-Value="@ConnectorStrokeColor" ValueChange="@OnStrokeColorChange" ShowButtons="false"></SfColorPicker>
+                    </div>
+                </div>
+            </div>
+        </div>     
+        <div class="row db-prop-row">
+            <div class="col-xs-6 db-col-left db-prop-text-style">
+                <span class="db-prop-text-style">Stroke Style</span>
+            </div>
+            <div class="col-xs-4 db-col-right db-prop-text-style" style="margin-left:20px">
+                <span class="db-prop-text-style">Thickness</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-6 db-col-left">
+                 <SfDropDownList TValue="string" TItem="BorderStylesFields" PopupWidth="160px" Index="@ConnectorStrokeStyle" DataSource="@BorderStyles">
+                    <DropDownListTemplates TItem="BorderStylesFields">
+                        <ItemTemplate>
+                            <div class='db-ddl-template-style'>
+                                <span class=@((context as BorderStylesFields).ClassName)></span>
+                            </div>
+                        </ItemTemplate>
+                        <ValueTemplate>
+                            <div class='db-ddl-template-style'>
+                                <span class=@((context as BorderStylesFields).ClassName)></span>
+                            </div>
+                        </ValueTemplate>
+                    </DropDownListTemplates>
+                    <DropDownListFieldSettings Text="Text" Value="Value"></DropDownListFieldSettings>
+                    <DropDownListEvents TValue="string" TItem="BorderStylesFields" ValueChange="@OnStrokeDashArrayChange"></DropDownListEvents>
+                 </SfDropDownList>
+            </div>
+            <div class="col-xs-4 db-col-right" style="margin-left:20px">
+                 <div class="db-text-input">
+                    <SfNumericTextBox ID="lineWidth" Min="1" Step="1"Format="n0" ValidateDecimalOnType="true" Decimals=0 Value="@ConnectorStrokeWidth">
+                        <NumericTextBoxEvents TValue="double" ValueChange="@OnStrokeWidthChange"></NumericTextBoxEvents>
+                    </SfNumericTextBox>
+                </div>
+            </div>
+        </div>
+        <div class="row db-prop-row">
+            <div class="col-xs-6 db-col-left db-prop-text-style">
+                <span class="db-prop-text-style">Start Arrow</span>
+            </div>
+            <div class="col-xs-4 db-col-right db-prop-text-style" style="margin-left:20px">
+                <span class="db-prop-text-style">Size</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-6 db-col-left">
+                <SfDropDownList ID="sourceType" TValue="string" TItem="DecoratorListFields" PopupWidth="160px"  DataSource="@DecoratorList" @bind-Value="@ConnectorSrcShape">
+                    <DropDownListFieldSettings Text="Text" Value="Value"></DropDownListFieldSettings>
+                    <DropDownListEvents TValue="string" TItem="DecoratorListFields" ValueChange="@OnConnectorSourceShapeChange"></DropDownListEvents>
+                </SfDropDownList>
+            </div>
+            <div class="col-xs-4 db-col-right" style="margin-left:20px">
+                 <div class="db-text-input">
+                    <SfNumericTextBox ID="sourceSize" Min="1" Step="1" ValidateDecimalOnType="true" Decimals=0 Format="n0"  Value="@ConnectorSrcShapeSize">
+                        <NumericTextBoxEvents TValue="double" ValueChange="@OnConnectorSourceShapeSizeChange"></NumericTextBoxEvents>
+                    </SfNumericTextBox>
+                </div>
+            </div>
+        </div>
+        <div class="row db-prop-row">
+            <div class="col-xs-6 db-col-left db-prop-text-style">
+                <span class="db-prop-text-style">End Arrow</span>
+            </div>
+            <div class="col-xs-4 db-col-right db-prop-text-style" style="margin-left:20px">
+                <span class="db-prop-text-style">Size</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-6 db-col-left">
+                <SfDropDownList ID="targetType" TValue="string" TItem="DecoratorListFields" PopupWidth="160px"  DataSource="@DecoratorList" @bind-Value="@ConnectortarShape">
+                    <DropDownListFieldSettings Text="Text" Value="Value"></DropDownListFieldSettings>
+                    <DropDownListEvents TValue="string" TItem="DecoratorListFields" ValueChange="@OnConnectorTargetShapeChange"></DropDownListEvents>
+                </SfDropDownList>
+            </div>
+            <div class="col-xs-4 db-col-right" style="margin-left:20px">
+                 <div class="db-text-input">
+                    <SfNumericTextBox ID="targetSize" Min="1" Step="1" ValidateDecimalOnType="true" Decimals=0 Format="n0" Value="@ConnectortarShapeSize">
+                        <NumericTextBoxEvents TValue="double" ValueChange="@OnConnectorTargetShapeSizeChange"></NumericTextBoxEvents>
+                    </SfNumericTextBox>
+                </div>
+            </div>
+        </div>
+        <div class="row db-prop-row">
+            <div class="col-xs-6 db-col-left" style="margin-top:5px">
+                <SfCheckBox ID="lineJump" Label="Bridging" @bind-Checked="@OnConnectorBridge" @onchange="@OnConnectorBridgingChange"></SfCheckBox>
+            </div>
+            <div class="col-xs-4 db-col-right" id="@lineJumpSizeDiv" style="display:@lineJumpSizeDivDisplay; margin-left:20px">
+                 <div class="db-text-input">
+                    <SfNumericTextBox ID="lineJumpSize" Min="1" Step="1" ValidateDecimalOnType="true" Format="n0" Decimals=0 Value="@ConnectorBridgeSize">
+                        <NumericTextBoxEvents TValue="double" ValueChange="@OnConnectorBridgeSizeChange"></NumericTextBoxEvents>
+                    </SfNumericTextBox>
+                </div>
+            </div>
+        </div>
+        <div class="row db-prop-row">
+            <div class="col-xs-2 db-col-right db-prop-text-style" style="margin-right: 15px;padding-top: 6px">
+                <span class="db-prop-text-style">Opacity</span>
+            </div>
+            <div class="col-xs-8 db-col-left" style="padding-right:10px;width:140px">
+                <SfSlider @ref="OpacitySfSlide" ID="connectorOpacitySlider" Type="SliderType.MinRange" @bind-Value="@ConnectorOpacity" Min="0" Max="100" Step="10">
+                    <SliderEvents TValue="double" OnChange="@(e => { OnConnectorOpacityChange(e.Value); })"></SliderEvents>
+                </SfSlider>
+            </div>
+            <div class="col-xs-2 db-col-right" style="margin-left: -10px;padding-left: 8px">
+                <input type="text" id="connectorOpacitySliderText" value="@ConnectorOpacity" readonly="readonly" class="db-readonly-input" />
+            </div>
+        </div>
+    </div>
+    <div id='textPropertyContainer' class="db-text-prop-container" style="display:@TextPropertyVisibility">
+        <div class="db-prop-separator">
+        </div>      
+        <div class="row db-prop-row db-prop-header-text" style="width:100%">
+            <div class="col-xs-8 db-col-right"><span class="db-prop-text-style">Text</span></div>
+            <div class="col-xs-4 db-col-center"><span class="db-prop-text-style">Size</span></div>          
+         </div>
+        <div class="row db-prop-row">
+            <div class="col-xs-8 db-col-left">
+                <SfDropDownList ID="fontFamily" TValue="string" TItem="FontFamilyListFields" DataSource="@FontFamilyList" @bind-Value="@TextFontFamily">
+                    <DropDownListFieldSettings Text="Text" Value="Value"></DropDownListFieldSettings>
+                    <DropDownListEvents TValue="string" TItem="FontFamilyListFields" ValueChange="@OnFontFamilyChange"></DropDownListEvents>
+                </SfDropDownList>
+            </div>
+            <div class="col-xs-4 db-col-right">
+                 <div class="db-text-input">
+                    <SfNumericTextBox ID="fontSizeTextProperties" Min="1" Step="1" ValidateDecimalOnType="true" Decimals=0  Format="n0" Value="@TextFontSize">
+                        <NumericTextBoxEvents TValue="double" ValueChange="@OnTextFontSizeChanged"></NumericTextBoxEvents>
+                    </SfNumericTextBox>
+                </div>
+            </div>
+        </div>
+        <div class="row db-prop-row">
+            <div class="col-xs-8 db-col-left" id="textPositionDiv" style="display:@AnnotationPropertyVisibility">
+                <SfDropDownList ID="ddlTextPosition" TValue="string" TItem="TextPositionFields" DataSource="@TextPosition" @bind-Value="@TextPositionValue">
+                    <DropDownListFieldSettings Text="Text" Value="Value"></DropDownListFieldSettings>
+                    <DropDownListEvents TValue="string" TItem="TextPositionFields" ValueChange="@OnTextPositionChange"></DropDownListEvents>
+                </SfDropDownList>
+            </div>
+            <div class="col-xs-4 db-col-right" id="textColorDiv">
+                <SfColorPicker ID="textColor" Value="@TextColor" Mode="ColorPickerMode.Palette" ValueChange="@OnTextColorChange" ShowButtons="false"></SfColorPicker>
+            </div>
+        </div>
+        <div class="row db-prop-row" style="padding-top: 5px">
+            <div class="col-xs-6 db-col-left" id="textStyle">
+                <SfToolbar ID="toolbarTextStyle" >
+                    <ToolbarEvents Clicked="@OnTextStyleClick"></ToolbarEvents>
+                    <ToolbarItems>
+                        <ToolbarItem PrefixIcon="e-icons sf-icon-Bold tb-icons" TooltipText="Bold" CssClass="@BoldCss"></ToolbarItem>
+                        <ToolbarItem PrefixIcon="e-icons sf-icon-Italic tb-icons" TooltipText="Italic" CssClass="@ItalicCss"></ToolbarItem>
+                        <ToolbarItem PrefixIcon="e-icons sf-icon-Underline tb-icons" TooltipText="Underline" CssClass="@UnderlineCss"></ToolbarItem>
+                    </ToolbarItems>
+                </SfToolbar>
+            </div>
+            <div class="col-xs-6 db-col-right">
+                <SfToolbar ID="toolbarTextSubAlignment" >
+                    <ToolbarEvents Clicked="@OnTextSubAlignmentClick"></ToolbarEvents>
+                    <ToolbarItems>
+                        <ToolbarItem PrefixIcon="e-icons sf-icon-ParaAlignLeft tb-icons" TooltipText="Align Text Left" CssClass="@AlignTextLeftCss"></ToolbarItem>
+                        <ToolbarItem PrefixIcon="e-icons sf-icon-ParaAlignCenter tb-icons" TooltipText="Align Text Center" CssClass="@AlignTextCenterCss"></ToolbarItem>
+                        <ToolbarItem PrefixIcon="e-icons sf-icon-ParaAlignRight tb-icons" TooltipText="Align Text Right" CssClass="@AlignTextRightCss"></ToolbarItem>
+                    </ToolbarItems>
+                </SfToolbar>
+            </div>
+        </div>
+        <div class="row db-prop-row" id='toolbarTextAlignmentDiv' style="padding-top: 10px; display:@AnnotationPropertyVisibility">
+            <SfToolbar ID="toolbarTextAlignment" OverflowMode="@OverflowMode.Scrollable">
+                <ToolbarEvents Clicked="@OnTextAlignmentClick"></ToolbarEvents>
+                <ToolbarItems>
+                    <ToolbarItem PrefixIcon="e-icons sf-icon-TextLeft tb-icons" TooltipText="Align Right" CssClass="@HorAlignRightCss"></ToolbarItem>
+                    <ToolbarItem PrefixIcon="e-icons sf-icon-TextHorizontalCenter tb-icons" TooltipText="Align Center" CssClass="@HorAlignCenterCss"></ToolbarItem>
+                    <ToolbarItem PrefixIcon="e-icons sf-icon-TextRight tb-icons" TooltipText="Align Left" CssClass="@HorAlignLeftCss"></ToolbarItem>
+                    <ToolbarItem PrefixIcon="e-icons sf-icon-TextTop tb-icons" TooltipText="Align Bottom" CssClass="@VerAlignBottomCss"></ToolbarItem>
+                    <ToolbarItem PrefixIcon="e-icons sf-icon-TextVerticalCenter tb-icons" TooltipText="Align Middle" CssClass="@VerAlignMiddleCss"></ToolbarItem>
+                    <ToolbarItem PrefixIcon="e-icons sf-icon-TextBottom tb-icons" TooltipText="Align Top" CssClass="@VerAlignTopCss"></ToolbarItem>
+                </ToolbarItems>
+            </SfToolbar>
+        </div>
+        <div class="row db-prop-row">
+            <div class="col-xs-2 db-col-right db-prop-text-style" style="margin-right: 15px;padding-top: 6px">
+                <span class="db-prop-text-style">Opacity</span>
+            </div>
+            <div class="col-xs-8 db-col-left" style="padding-right:10px">
+                <SfSlider ID="textOpacitySlider" Type="SliderType.MinRange" Value="@TextOpacity" Min="0" Max="100" Step="10">
+                    <SliderEvents TValue="double" OnChange="@(e => { OnTextOpacityChange(e.Value); })"></SliderEvents>
+                </SfSlider>
+            </div>
+            <div class="col-xs-2 db-col-right" style="margin-left: -15px;padding-left: 8px">
+                <input id='textOpacityText' type="text" value="@TextOpacity" class="db-readonly-input" readOnly="readonly" />
+            </div>
+        </div>
+    </div>
+    <SfDialog ID="insert_link_dialog" @ref="@TextHyperLink" @bind-Visible="@InsertLinkVisible" Width="400px" ShowCloseIcon="true" IsModal="true" AllowPrerender="true">
+        <DialogTemplates>
+            <Header>
+                Insert Link
+            </Header>
+            <Content>
+                <div id="hyperlinkDialogContent">
+                    <div class="row">
+                        <div class="row">Enter URL</div><div class="row db-dialog-child-prop-row">
+                            <input type="text" id="hyperlink" value ="@ValueLink">
+                        </div>
+                    </div><div class="row db-dialog-prop-row">
+                        <div class="row">Link Text (Optional)</div>
+                        <div class="row db-dialog-child-prop-row"><input type="text" id="hyperlinkText" value ="@ValueText"></div>
+                    </div>
+                </div>
+            </Content>
+        </DialogTemplates>
+        <DialogButtons>
+            <DialogButton OnClick="@ApplyAnnotationLink" Content="Apply" IsPrimary="true" CssClass="e-flat e-db-primary">
+            </DialogButton>
+            <DialogButton OnClick="@CancelAnnotationLink" Content="Cancel" CssClass="e-flat">
+            </DialogButton>
+        </DialogButtons>
+    </SfDialog>
+</div>
+
+@code {
+   
+   
+    public DiagramMain Parent { get; set; }
+    /// <summary>
+    /// Reference to the node opacity Slider
+    /// </summary>
+    SfSlider<double>? SfSlide;
+    /// <summary>
+    /// Reference to the text opacity Slider
+    /// </summary>
+    SfSlider<double>? OpacitySfSlide;
+
+    /// <summary>
+    /// Gets or sets the visibility of diagram property panel which contains the details about the page settings
+    /// </summary>
+    public string DiagramPropertyVisibility { get; set; } = "block";
+    /// <summary>
+    /// Gets or sets the visibility of node property panel
+    /// </summary>
+    public string NodePropertyVisibility { get; set; } = "none";
+    /// <summary>
+    /// Gets or sets the visibility of connector property panel
+    /// </summary>
+    public string ConnectorPropertyVisibility { get; set; } = "none";
+    /// <summary>
+    /// Gets or sets the visibility of text property panel
+    /// </summary>
+    public string TextPropertyVisibility { get; set; } = "none";
+    /// <summary>
+    /// Gets or sets the visibility of annotation property panel
+    /// </summary>
+    public string AnnotationPropertyVisibility { get; set; } = "block";
+    /// <summary>
+    /// Gets or sets the css class name to display the bridge space
+    /// </summary>
+    public string lineJumpSizeDivDisplay { get; set; } = "none";
+
+    /// <summary>
+    /// Gets or sets the CSS class name for displaying gradient styles to the diagram elements.
+    /// </summary>
+    public string  gradientStyleClass { get; set; } = "row db-prop-row db-gradient-style-hide";
+
+    /// <summary>
+    /// Gets or sets the CSS class name for displaying portrait button style.
+    /// </summary>
+    public string portraitStyleClass { get; set; } = "e-control e-btn e-lib e-flat e-primary";
+
+
+    /// <summary>
+    /// Gets or sets the CSS class name for displaying aspect ratio button style.
+    /// </summary>
+    public string aspectRatioCssClass { get; set; } = "e-control e-btn e-lib e-icon-btn";
+
+    /// <summary>
+    /// Gets or sets the CSS class name for displaying portrait button style.
+    /// </summary>
+    public string landscapeStyleClass { get; set; } = "e-control e-btn e-lib e-flat e-primary e-active";
+
+    /// <summary>
+    /// Gets or sets a value indicating whether gradient styles are visible for diagram elements.
+    /// </summary>
+    public string gradientVisibility { get; set; } = "";
+    /// <summary>
+    /// Reference to the reference gradient style id
+    /// </summary>
+    public string gradientStyleId { get; set; } = "gradientStyle";   
+    public string lineJumpSizeDiv { get; set; } = "lineJumpSizeDiv";
+    /// <summary>
+    /// Gets or sets the CSS class name for styling the node panel in the property panel.
+    /// </summary>
+    public string nodePanelClass { get; set; } = "db-node-prop-container";
+
+    /// <summary>
+    /// Gets or sets the hyperlink value
+    /// </summary>
+
+    public string ValueLink { get; set; } = "";
+    /// <summary>
+    /// Gets or sets the hyperlink text
+    /// </summary>
+    public string ValueText { get; set; } = "";
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the page dimensions panel should be visible in property panel
+    /// </summary>
+    public string PageDimensionVisibility { get; set; } = "none";
+    /// <summary>
+    /// Gets or sets a value indicating whether the page orientation panel should be visible in property panel
+    /// </summary>
+    public string PageOrientationVisibility { get; set; } = "";
+    /// <summary>
+    /// Gets or sets the page portrait value
+    /// </summary>
+    public string PagePortrait { get; set; } = "";
+    public string PageLandscape { get; set; } = "";
+
+    /// <summary>
+    /// Gets or sets the CSS class name for enable/disable the aspect ratio button
+    /// </summary>
+
+    private string AspectRatioIcon = "sf-icon-Unlock";
+    private Dictionary<string, object> primButton = new Dictionary<string, object>()
+    {
+        { "title", "Enable Aspect Ratio"}
+    };
+
+    [Inject]
+    protected IJSRuntime? jsRuntime { get; set; }
+
+    SfDialog? TextHyperLink;
+
+    // Page Settings
+    #region
+
+    /// <summary>
+    /// Represents a class that defines fields for paper list items in the diagram.
+    /// </summary>
+    public class PaperListFields
+    {
+        public string Value { get; set; } = "";
+        public string Text { get; set; } = "";
+    }
+    /// <summary>
+    /// Gets or sets a list of paper list items available in the diagram.
+    /// </summary>
+    public List<PaperListFields> PaperList = new List<PaperListFields>()
+    {
+        new PaperListFields(){ Text= "Letter (8.5 in x 11 in)", Value= "Letter", },
+        new PaperListFields(){ Text= "Legal (8.5 in x 14 in)", Value= "Legal" },
+        new PaperListFields(){ Text= "Tabloid (11 in x 17 in)", Value="Tabloid" },
+        new PaperListFields(){ Text= "A3 (11.7 in x 16.53 in)", Value="A3" },
+        new PaperListFields(){ Text= "A4 (8.27 in x 11.7 in)", Value="A4" },
+        new PaperListFields(){ Text= "A5 (5.82 in x 8.27 in)", Value="A5" },
+        new PaperListFields(){ Text= "A6 (4.1 in x 5.8 in)", Value="A6" },
+        new PaperListFields(){ Text= "Custom", Value="Custom"}
+    };
+    #endregion
+
+
+    #region
+    /// <summary>
+    /// Gets or sets the background style of the node.
+    /// </summary>
+    public string BackgroundValue { get; set; } = "Solid";
+
+    public class BackgroundType
+    {
+        public string Value { get; set; } = "";
+        public string Text { get; set; } = "";
+    }
+    /// <summary>
+    /// Gets or sets the background types available for node
+    /// </summary>
+    public List<BackgroundType> BackgroundTypes = new List<BackgroundType>()
+    {
+        new BackgroundType(){ Text= "Solid", Value= "Solid" },
+        new BackgroundType(){ Text= "Gradient", Value= "Gradient" },
+    };
+    #endregion
+
+    // Node Properties
+    #region
+
+    /// <summary>
+    /// Represents a class that defines gradient directions.
+    /// </summary>
+    public class GradientDirectionsFields
+    {
+        public string Value { get; set; } = "";
+        public string Text { get; set; } = "";
+    }
+    /// <summary>
+    /// Gets or sets a list of gradient directions available for the diagram's elements.
+    /// </summary>
+    public List<GradientDirectionsFields> GradientDirections = new List<GradientDirectionsFields>()
+    {
+        new GradientDirectionsFields() { Text= "Bottom to Top", Value="BottomToTop" },
+        new GradientDirectionsFields() { Text= "Top to Bottom", Value="TopToBottom" },
+        new GradientDirectionsFields() { Text= "Right to Left", Value="RightToLeft" },
+        new GradientDirectionsFields() { Text= "Left to Right", Value="LeftToRight" }
+    };
+    /// <summary>
+    /// Represents a class that defines fields for border style for node
+    /// </summary>
+    public class BorderStylesFields
+    {
+        public string Value { get; set; } = "";
+        public string Text { get; set; } = "";
+        public string ClassName { get; set; } = "";
+    }
+    /// <summary>
+    /// Gets or sets a list of border styles available for the diagram's elements.
+    /// </summary>
+    public List<BorderStylesFields> BorderStyles = new List<BorderStylesFields>()
+    {
+        new BorderStylesFields() { Text= "None", Value="", ClassName="ddl-svg-style ddl_linestyle_none" },
+        new BorderStylesFields() { Text= "1,2", Value="1,2", ClassName="ddl-svg-style ddl_linestyle_one_two" },
+        new BorderStylesFields() { Text= "3,3", Value="3,3", ClassName="ddl-svg-style ddl_linestyle_three_three" },
+        new BorderStylesFields() { Text= "5,3", Value="5,3", ClassName="ddl-svg-style ddl_linestyle_five_three" },
+        new BorderStylesFields() { Text= "4,4,1", Value="4,4,1", ClassName="ddl-svg-style ddl_linestyle_four_four_one" }
+    };
+    #endregion
+
+    // Connector Properties
+    #region
+    /// <summary>
+    /// Represents a class that defines fields for line type of connectors
+    /// </summary>
+    public class LineTypeFields
+    {
+        public string Value { get; set; } = "";
+        public string Text { get; set; } = "";
+    }
+    /// <summary>
+    /// Gets or sets a list of line types available for the diagram's connectors.
+    /// </summary>
+    public List<LineTypeFields> LineType = new List<LineTypeFields>() {
+        new LineTypeFields(){ Text= "Straight", Value= "Straight", },
+        new LineTypeFields(){ Text= "Orthogonal", Value= "Orthogonal" },
+        new LineTypeFields(){ Text= "Bezier", Value="Bezier" }
+    };
+    /// <summary>
+    /// Represents a class that defines decorator list fields
+    /// </summary>
+    public class DecoratorListFields
+    {
+        public string Value { get; set; } = "";
+        public string Text { get; set; } = "";
+    }
+    /// <summary>
+    /// Gets or sets a list of decorator options available for the connectors in the diagram.
+    /// </summary>
+    public List<DecoratorListFields> DecoratorList = new List<DecoratorListFields>()
+    {
+        new DecoratorListFields(){ Text= "None", Value= "None", },
+        new DecoratorListFields(){ Text= "Arrow", Value= "Arrow" },
+        new DecoratorListFields(){ Text= "Diamond", Value="Diamond" },
+        new DecoratorListFields(){ Text= "OpenArrow", Value= "OpenArrow", },
+        new DecoratorListFields(){ Text= "Circle", Value= "Circle" },
+        new DecoratorListFields(){ Text= "Square", Value="Square" },
+        new DecoratorListFields(){ Text= "DoubleArrow", Value= "DoubleArrow" }
+    };
+    #endregion
+
+    // Text Properties
+    #region
+    /// <summary>
+    /// Represents a class that defines font family list fields
+    /// </summary>
+    public class FontFamilyListFields
+    {
+        public string Value { get; set; } = "";
+        public string Text { get; set; } = "";
+    }
+    /// <summary>
+    /// Gets or sets a list of font families available for the text in the diagram.
+    /// </summary>
+    public List<FontFamilyListFields> FontFamilyList = new List<FontFamilyListFields>()
+    {
+        new FontFamilyListFields(){ Text= "Arial", Value= "Arial", },
+        new FontFamilyListFields(){ Text= "Aharoni", Value= "Aharoni" },
+        new FontFamilyListFields(){ Text= "Bell MT", Value="Bell MT" },
+        new FontFamilyListFields(){ Text= "Fantasy", Value= "Fantasy" },
+        new FontFamilyListFields(){ Text= "Times New Roman", Value= "Times New Roman" },
+        new FontFamilyListFields(){ Text= "Segoe UI", Value="Segoe UI" },
+        new FontFamilyListFields(){ Text= "Verdana", Value= "Verdana" }
+    };
+    /// <summary>
+    /// Represents a class that defines the position of the text.
+    /// </summary>
+    public class TextPositionFields
+    {
+        public string Value { get; set; } ="";
+        public string Text { get; set; } = "";
+    }
+    /// <summary>
+    /// Gets or sets a list of text position options available for the text in diagram nodes.
+    /// </summary>
+    public List<TextPositionFields> NodeTextPosition = new List<TextPositionFields>()
+    {
+        new TextPositionFields(){ Text= "TopLeft", Value= "TopLeft", },
+        new TextPositionFields(){ Text= "TopCenter", Value= "TopCenter" },
+        new TextPositionFields(){ Text= "TopRight", Value="TopRight" },
+        new TextPositionFields(){ Text= "MiddleLeft", Value= "MiddleLeft", },
+        new TextPositionFields(){ Text= "Center", Value= "Center" },
+        new TextPositionFields(){ Text= "MiddleRight", Value="MiddleRight" },
+        new TextPositionFields(){ Text= "BottomLeft", Value= "BottomLeft" },
+        new TextPositionFields(){ Text= "BottomCenter", Value= "BottomCenter" },
+        new TextPositionFields(){ Text= "BottomRight", Value="BottomRight" }
+    };
+    /// <summary>
+    /// Gets or sets a list of text position options available for the text in diagram connectors.
+    /// </summary>
+    public List<TextPositionFields> ConnectorTextPosition = new List<TextPositionFields>()
+    {
+        new TextPositionFields(){ Text= "Left", Value= "Left", },
+        new TextPositionFields(){ Text= "Center", Value= "Center" },
+        new TextPositionFields(){ Text= "Right", Value="Right" }
+    };
+
+    #endregion
+
+    #region
+    /// <summary>
+    /// Gets or sets the CSS class name for styling bold icon in the property panel
+    /// </summary>
+    public string BoldCss = "tb-item-start";
+    /// <summary>
+    /// Gets or sets the CSS class name for styling itlaic icon in the property panel
+    /// </summary>
+    public string ItalicCss = "tb-item-middle";
+    /// <summary>
+    /// Gets or sets the CSS class name for styling underline icon in the property panel
+    /// </summary>
+    public string UnderlineCss = "tb-item-end";
+    /// <summary>
+    /// Gets or sets the CSS class name for styling align left icon in the property panel
+    /// </summary>
+    public string AlignTextLeftCss = "tb-item-start";
+    /// <summary>
+    /// Gets or sets the CSS class name for styling align centre icon in the property panel
+    /// </summary>
+    public string AlignTextCenterCss = "tb-item-middle";
+    /// <summary>
+    /// Gets or sets the CSS class name for styling align right icon in the property panel
+    /// </summary>
+    public string AlignTextRightCss = "tb-item-end";
+
+    /// <summary>
+    /// Gets or sets the CSS class name for styling horizontal alignment right icon in the property panel
+    /// </summary>
+    public string HorAlignRightCss = "tb-item-start";
+    /// <summary>
+    /// Gets or sets the CSS class name for styling horizontal alignment centre icon in the property panel
+    /// </summary>
+    public string HorAlignCenterCss = "tb-item-middle";
+    /// <summary>
+    /// Gets or sets the CSS class name for styling horizontal alignment left icon in the property panel
+    /// </summary>
+    public string HorAlignLeftCss = "tb-item-middle";
+    /// <summary>
+    /// Gets or sets the CSS class name for styling vertical alignment bottom icon in the property panel
+    /// </summary>
+    public string VerAlignBottomCss = "tb-item-middle";
+    /// <summary>
+    /// Gets or sets the CSS class name for styling vertical alignment middle icon in the property panel
+    /// </summary>
+    public string VerAlignMiddleCss = "tb-item-middle";
+    /// <summary>
+    /// Gets or sets the CSS class name for styling vertical alignment top icon in the property panel
+    /// </summary>
+    public string VerAlignTopCss = "tb-item-end";
+
+
+    /// <summary>
+    /// A property used to prevent specific properties from being changed in the diagram.
+    /// </summary>
+    public bool PreventPropertyChange { get; set; }
+
+    public bool InsertLinkVisible { get; set; } = false;
+    /// <summary>
+    /// Gets or sets the offset  X of the diagram node.
+    /// </summary>
+    public double NodeOffsetX { get; set; }
+    /// <summary>
+    /// Gets or sets the offset Y of the diagram node.
+    /// </summary>
+    public double NodeOffsetY { get; set; }
+    /// <summary>
+    /// Gets or sets the width of the diagram node.
+    /// </summary>
+    public double NodeWidth { get; set; }
+    /// <summary>
+    /// Gets or sets the height of the diagram node.
+    /// </summary>
+    public double NodeHeight { get; set; }
+    /// <summary>
+    /// Gets or sets the rotate angle of the diagram node.
+    /// </summary>
+    public double NodeRotateAngle { get; set; }
+    /// <summary>
+    /// Gets or sets the fill color of the diagram node.
+    /// </summary>
+    public string NodeFillColor { get; set; } = "";
+    /// <summary>
+    /// Gets or sets the Gradient value of the diagram node.
+    /// </summary>
+    public bool IsGradient { get; set; }
+    /// <summary>
+    /// Gets or sets the gradient color of the diagram node.
+    /// </summary>
+    public string NodeGradientColor { get; set; } = "";
+    /// <summary>
+    /// Gets or sets the gradient direction of the diagram node.
+    /// </summary>
+    public string NodeGradientDirection { get; set; } = "";
+    /// <summary>
+    /// Gets or sets the gradient direction index of the diagram node.
+    /// </summary>
+    public int NodeGradientDircIndex { get; set; } = 0;
+    /// <summary>
+    /// Gets or sets the stroke color of the diagram node.
+    /// </summary>
+    public string NodeStrokeColor { get; set; } = "";
+    /// <summary>
+    /// Gets or sets the stroke dash array of the diagram node.
+    /// </summary>
+    public string NodeStrokeDashArray { get; set; } = "1,2";
+    /// <summary>
+    /// Gets or sets the stroke width  of the diagram node.
+    /// </summary>
+    public double NodeStrokeWidth { get; set; }
+    /// <summary>
+    /// Gets or sets the opacity of the diagram node.
+    /// </summary>
+    public double NodeOpacity { get; set; }
+    /// <summary>
+    /// Gets or sets the stroke style of the diagram node.
+    /// </summary>
+    public int NodeStrokeStyle { get; set; } = 0;
+
+
+    // Text properties
+    /// <summary>
+    /// Gets or sets the font family used for the text.
+    /// </summary>
+    public string TextFontFamily { get; set; } = "";
+    /// <summary>
+    /// Gets or sets the position used for the text.
+    /// </summary>
+    public string TextPositionValue { get; set; } = "";
+    /// <summary>
+    /// Gets or sets the color used for the text.
+    /// </summary>
+    public string TextColor { get; set; } = "#008000ff";
+    /// <summary>
+    /// Gets or sets the font size used for the text.
+    /// </summary>
+    public double TextFontSize { get; set; }
+    /// <summary>
+    /// Gets or sets the opacity used for the text.
+    /// </summary>
+    public double TextOpacity { get; set; }
+    List<TextPositionFields>? TextPosition  { get; set; }
+
+    // Connector Properties
+    /// <summary>
+    /// Gets or sets the type of connector used in the diagram.
+    /// </summary>
+    public string ConnectorType { get; set; } = "";
+    /// <summary>
+    /// Gets or sets the stroke color of connector used in the diagram.
+    /// </summary>
+    public string ConnectorStrokeColor { get; set; } = "";
+    /// <summary>
+    /// Gets or sets the stroke dash array of connector used in the diagram.
+    /// </summary>
+    public string ConnectorStrokeDashArray { get; set; } = "1,2";
+    /// <summary>
+    /// Gets or sets the stroke style of connector used in the diagram.
+    /// </summary>
+    public int ConnectorStrokeStyle { get; set; } = 0;
+    /// <summary>
+    /// Gets or sets the stroke width of connector used in the diagram.
+    /// </summary>
+    public double ConnectorStrokeWidth { get; set; }
+    /// <summary>
+    /// Gets or sets the source shape of connector used in the diagram.
+    /// </summary>
+    public string ConnectorSrcShape { get; set; } = "";
+    /// <summary>
+    /// Gets or sets the source size of connector used in the diagram.
+    /// </summary>
+    public double ConnectorSrcShapeSize { get; set; }
+    /// <summary>
+    /// Gets or sets the target shape of connector used in the diagram.
+    /// </summary>
+    public string ConnectortarShape { get; set; } = "";
+    /// <summary>
+    /// Gets or sets the target size of connector used in the diagram.
+    /// </summary>
+    public double ConnectortarShapeSize { get; set; }
+    public bool OnConnectorBridge { get; set; }
+    /// <summary>
+    /// Gets or sets the bridge size of connector used in the diagram.
+    /// </summary>
+    public double ConnectorBridgeSize { get; set; }
+    /// <summary>
+    /// Gets or sets the opacity of connector used in the diagram.
+    /// </summary>
+    public double ConnectorOpacity { get; set; }
+
+    // Diagram Properties
+    /// <summary>
+    /// Gets or sets the selected paper size value for the diagram.
+    /// </summary>
+    public string PaperListValue { get; set; } = "Letter";
+    /// <summary>
+    /// Gets or sets the value that indicates whether the diagram's page orientation is set to portrait mode.
+    /// </summary>
+    public bool PagePortraitValue { get; set; } = false;
+    /// <summary>
+    /// Gets or sets the value that indicates whether the diagram's page orientation is set to landscape mode.
+    /// </summary>
+    public bool PageLandscapeValue { get; set; } = true;
+    /// <summary>
+    /// Gets or sets the background color for the diagram.
+    /// </summary>
+    public string PageBgColorValue { get; set; } = "#ffffffff";
+    /// <summary>
+    /// Gets or sets the value that indicates whether the diagram's page break should be visible
+    /// </summary>
+    public bool ShowPageBreaksValue { get; set; } = false;
+    /// <summary>
+    /// Gets or sets the page width for the diagram.
+    /// </summary>
+    public double PageWidth { get; set; } = 1056;
+    /// <summary>
+    /// Gets or sets the page height for the diagram.
+    /// </summary>
+    public double PageHeight { get; set; } = 816;
+    /// <summary>
+    /// Gets or sets the portarait radio button value.
+    /// </summary>
+    public string PortraitRadioButtonValue { get; set; } = "false";
+    /// <summary>
+    /// Gets or sets the landscape radio button value.
+    /// </summary>
+    public string LandscapeRadioButtonValue { get; set; } = "true";
+
+    #endregion
+
+    protected override void OnInitialized()
+    {
+        PageLandscape= PageLandscapeValue.ToString();
+        PagePortrait = PagePortraitValue.ToString();
+    }
+    public void StateChanged()
+    {
+        StateHasChanged();
+    } 
+
+    public void NodeRotateAngleValue(double Value)
+    {
+        NodeRotateAngle = Value;
+        StateHasChanged();
+    }
+
+    public async void PropertyPanelHideButton()
+    {
+        await Parent.Toolbar.HidePropertyContainer();
+
+    }
+
+    /// <summary>
+    /// This method is used to display the property panel items based on the single node selection.
+    /// </summary>
+    public void SingleNodeSelection()
+    {
+
+        TextPosition = NodeTextPosition;
+
+        Node? node = Parent.DiagramContent.Diagram.GetObject(Parent.DiagramContent.Diagram.SelectionSettings.Nodes[0].ID) as Node;
+        if(node == null)
+        {
+            node = Parent.DiagramContent.Diagram.SelectionSettings.Nodes[0];
+        }
+        if (node != null)
+        {
+            SfDiagramComponent Diagram = Parent.DiagramContent.Diagram;
+            NodeOffsetX = node.OffsetX;
+            NodeOffsetY = node.OffsetY;
+            NodeWidth = Convert.ToDouble(node.Width);
+            NodeHeight = Convert.ToDouble(node.Height);
+            if (node.Constraints.HasFlag(NodeConstraints.AspectRatio))
+            {
+                AspectRatioIcon = "sf-icon-Lock";
+                aspectRatioCssClass += " e-active";
+                primButton = new Dictionary<string, object>()
+                {
+                    { "title", "Disable Aspect Ratio"}
+                };
+            }
+            else
+            {
+                AspectRatioIcon = "sf-icon-Unlock";
+                aspectRatioCssClass = "e-control e-btn e-lib e-icon-btn";
+                primButton = new Dictionary<string, object>()
+                {
+                    { "title", "Enable Aspect Ratio"}
+                };
+            }
+
+            NodeStrokeWidth = node.Style.StrokeWidth;
+            NodeOpacity = node.Style.Opacity * 100;
+            NodeStrokeDashArray = node.Style.StrokeDashArray;
+
+            if (!node.Style.Fill.Contains("#"))
+            {
+                int ColorValue = Color.FromName(node.Style.Fill).ToArgb();
+                string ColorHex = string.Format("{0:x6}", ColorValue);
+                NodeFillColor = "#" + ColorHex.Substring(2);
+            }
+            else
+            {
+                NodeFillColor = node.Style.Fill;
+            }
+
+            if (!node.Style.StrokeColor.Contains("#"))
+            {
+                int ColorValue = Color.FromName(node.Style.StrokeColor).ToArgb();
+                string ColorHex = string.Format("{0:x6}", ColorValue);
+                NodeStrokeColor = "#" + ColorHex.Substring(2);
+            }
+            else
+            {
+                NodeStrokeColor = node.Style.StrokeColor;
+            }
+            UpdateNodeStrokeStyle(NodeStrokeDashArray.ToString());
+            if(node.Shape.Type == NodeShapes.Text && node.Shape is TextShape textShape && !string.IsNullOrEmpty(textShape.Content))
+            {
+                AnnotationPropertyVisibility = "none";
+                TextPropertyPanelVisibility();
+                if (node != null && node.Style != null)
+                {
+                    if (node?.Style is TextStyle textStyle)
+                    {
+                        BindAnnotationStyleProperties(textStyle);
+                    }
+                }
+            }
+            else if ((node.Annotations.Count > 0 && (node.Annotations[0].Content != "" || (node.Annotations[0].Hyperlink != null && (node.Annotations[0].Hyperlink.Url != "" || node.Annotations[0].Hyperlink.Content != "")))))
+            {
+                TextPropertyPanelVisibility();
+                BindNodeAnnotationProperties(node.Annotations[0]);
+            }
+
+            if (node != null && node.Style != null && node.Style.Gradient != null && node.Style.Gradient is LinearGradientBrush)
+            {
+                IsGradient = true;
+                BackgroundValue = "Gradient";
+                gradientPropertyVisibility("gradientStyle", true);
+
+                if (node?.Style.Gradient is LinearGradientBrush linearGradient)
+                {
+                    NodeGradientDirection = GetGradientDirection(linearGradient);
+                }
+
+                if (node != null && node.Style != null && node.Style.Gradient != null && node.Style.Gradient.GradientStops.Count > 1)
+                {
+
+                    if (node.Style.Gradient.GradientStops[1].Color != null)
+                    {
+                        if (!node.Style.Gradient.GradientStops[1].Color.Contains("#"))
+                        {
+                            int ColorValue = Color.FromName(node.Style.Gradient.GradientStops[1].Color).ToArgb();
+                            string ColorHex = string.Format("{0:x6}", ColorValue);
+                            NodeGradientColor = "#" + ColorHex.Substring(2);
+                        }
+                        else
+                        {
+                            NodeGradientColor = node.Style.Gradient.GradientStops[1].Color;
+                        }
+                    }
+                }
+
+            }
+            else
+            {
+                IsGradient = false;
+                BackgroundValue = "Solid";
+                gradientPropertyVisibility("gradientStyle", false);                
+                int ColorValue = Color.FromName("white").ToArgb();
+                string ColorHex = string.Format("{0:x6}", ColorValue);
+                NodeGradientColor = "#" + ColorHex.Substring(2);
+            }
+        }
+    }
+    /// <summary>
+    /// This method is used to apply the background(solid/gradient) for the node
+    /// </summary>
+    public void OnBackgroundTypeChange(Syncfusion.Blazor.DropDowns.ChangeEventArgs<string, BackgroundType> args)
+    {
+        BackgroundValue = args.Value;
+        bool Value = BackgroundValue == "Gradient" ? true : false;
+
+        gradientPropertyVisibility("gradientStyle", Value);
+        OnUpdateNodeProperties("Gradient", ((!Value) ? "false" : "true"));
+    }
+    public async void slider()
+    {
+        if (SfSlide != null)
+        {
+            await SfSlide.RepositionAsync();
+        }
+        StateHasChanged();
+    }
+    public async void sliderConnector()
+    {
+        if (OpacitySfSlide != null)
+        {
+            await OpacitySfSlide.RepositionAsync();
+        }
+        StateHasChanged();
+    }
+    /// <summary>
+    /// This method is used to display the property panel items based on the single connector selection.
+    /// </summary>
+    public void SingleConnectorSelection()
+    {
+        TextPosition = ConnectorTextPosition;
+
+        Connector Connector = Parent.DiagramContent.Diagram.SelectionSettings.Connectors[0];
+        if (Connector != null)
+        {
+            SfDiagramComponent Diagram = Parent.DiagramContent.Diagram;
+            if(Parent.DiagramContent.Diagram.SelectionSettings.Connectors.Count == 1)
+            {
+                ConnectorType =  Connector.Type.ToString();
+            }
+            if (!Connector.Style.StrokeColor.Contains("#"))
+            {
+                int ColorValue = Color.FromName(Connector.Style.StrokeColor).ToArgb();
+                string ColorHex = string.Format("{0:x6}", ColorValue);
+                ConnectorStrokeColor = "#" + ColorHex.Substring(2);
+            }
+            else
+            {
+                ConnectorStrokeColor = Connector.Style.StrokeColor;
+            }
+            ConnectorStrokeWidth = Connector.Style.StrokeWidth;
+
+            ConnectortarShape = Connector.TargetDecorator.Shape.ToString();
+            ConnectortarShapeSize = (Connector.TargetDecorator.Width > Connector.TargetDecorator.Height) ? Connector.TargetDecorator.Width : Connector.TargetDecorator.Height;
+            ConnectorSrcShape = Connector.SourceDecorator.Shape.ToString();
+            ConnectorSrcShapeSize = (Connector.SourceDecorator.Width > Connector.SourceDecorator.Height) ? Connector.SourceDecorator.Width : Connector.SourceDecorator.Height;
+            OnConnectorBridge = ((Connector.Constraints & ConnectorConstraints.Bridging) != 0) ? true : false;
+            enableProperty("lineJumpSizeDiv", OnConnectorBridge);
+            ConnectorBridgeSize = Connector.BridgeSpace;
+            ConnectorOpacity = Connector.Style.Opacity * 100;
+            ConnectorStrokeDashArray = Connector.Style.StrokeDashArray;
+            UpdateConnectorStrokeStyle(ConnectorStrokeDashArray.ToString());
+
+
+            if (Connector.Annotations.Count > 0 && Connector.Annotations[0].Content != "")
+            {    
+                TextPropertyPanelVisibility();
+                BindConnectorAnnotationProperties(Connector.Annotations[0]);
+            }
+        }
+    }
+    /// <summary>
+    /// This method is used to display the property panel items based on the selected items.
+    /// </summary>
+    public void PanelVisibility(){
+
+        SfDiagramComponent Diagram = Parent.DiagramContent.Diagram;
+        NodePropertyVisibility = "none";
+        ConnectorPropertyVisibility = "none";
+        DiagramPropertyVisibility = "none";
+        TextPropertyVisibility = "none";
+        if(Parent.DiagramContent.Diagram.SelectionSettings.Nodes.Count>0 ) {
+            NodePropertyVisibility = "block";
+            NodeRotateAngle = Diagram.SelectionSettings.Nodes[0].RotationAngle;
+            SingleNodeSelection();
+        }
+        else if (Parent.DiagramContent.Diagram.SelectionSettings.Connectors.Count > 0 )
+        {
+            ConnectorPropertyVisibility="block";
+            SingleConnectorSelection();
+        }
+        else
+        {
+            DiagramPropertyVisibility = "block";
+            BindDiagramProperties();
+        }
+        StateHasChanged();
+    }
+    /// <summary>
+    /// Sets the visibility of the property panel.
+    /// </summary>
+    public void PropertyPanelVisibility()
+    {
+        DiagramPropertyVisibility = "none";
+        NodePropertyVisibility = "none";
+        ConnectorPropertyVisibility = "none";
+        TextPropertyVisibility = "none";
+        StateHasChanged();
+    }
+    /// <summary>
+    /// Sets the visibility of the text property panel.
+    /// </summary>
+    public void TextPropertyPanelVisibility()
+    {
+        TextPropertyVisibility = "block";       
+
+        StateHasChanged();
+    }
+    public void gradientPropertyVisibility(string id, bool value)
+    {
+        if (value) 
+        {
+            if (id == "gradientStyle") 
+            {
+                gradientStyleClass = "row db-prop-row db-gradient-style-show";
+            }
+            else
+            {
+                NodePropertyVisibility = "block";
+            }
+        }
+        else
+        {
+            if (id == "gradientStyle") 
+            {
+                gradientStyleClass = "row db-prop-row db-gradient-style-hide";
+            } 
+            else 
+            {
+                NodePropertyVisibility = "none";
+            }
+        }
+    }
+
+    public void UpdatePropertyPanel()
+    {
+        SfDiagramComponent Diagram = Parent.DiagramContent.Diagram;
+        int ObjectsLength = Diagram.SelectionSettings.Nodes.Count + Diagram.SelectionSettings.Connectors.Count;
+        if (ObjectsLength == 1)
+        {
+
+            if (Diagram.SelectionSettings.Nodes.Count == 1)
+                Parent.DiagramPropertyPanel.SingleNodeSelection();
+            else
+                Parent.DiagramPropertyPanel.SingleConnectorSelection();
+
+        }
+        StateHasChanged();
+    }
+
+    public void addClassInElement(string id, string className)
+    {
+        if(id == "nodePropertyContainer")
+
+            nodePanelClass= string.Concat(nodePanelClass, className);
+        StateHasChanged();
+    }
+    public void removeClassInElement(string id, string className)
+    {
+        if(nodePanelClass == "db-node-prop-container multiple" || nodePanelClass == "db-node-prop-container multiple connector")
+        {
+            nodePanelClass = nodePanelClass.Remove(22);
+        }
+    }
+
+
+    /// <summary>
+    /// Binds the properties of a shape annotation to property panel for node
+    /// </summary>
+    /// <param name="Annotation">The shape annotation whose properties are to be bound.</param>
+    public void BindNodeAnnotationProperties(ShapeAnnotation Annotation)
+    {
+        TextPositionValue = GetNodeTextPositionValue(Annotation.Offset);
+        BindAnnotationStyleProperties(Annotation.Style);
+        BindAnnotationAlignProperties(Annotation.HorizontalAlignment, Annotation.VerticalAlignment);  
+    }
+    /// <summary>
+    /// Binds the annotaion alignment properties to property panel
+    /// </summary>
+    public void BindAnnotationAlignProperties(HorizontalAlignment HorizontalAlig, VerticalAlignment VerticalAlig)
+    {
+        HorAlignLeftCss = (HorizontalAlig == HorizontalAlignment.Left) ? HorAlignLeftCss + " tb-item-selected" : HorAlignLeftCss.Replace(" tb-item-selected", "");
+        HorAlignCenterCss = (HorizontalAlig == HorizontalAlignment.Center) ? HorAlignCenterCss + " tb-item-selected" : HorAlignCenterCss.Replace(" tb-item-selected", "");
+        HorAlignRightCss = (HorizontalAlig == HorizontalAlignment.Right) ? HorAlignRightCss + " tb-item-selected" : HorAlignRightCss.Replace(" tb-item-selected", "");
+
+        VerAlignBottomCss = (VerticalAlig == VerticalAlignment.Bottom) ? VerAlignBottomCss + " tb-item-selected" : VerAlignBottomCss.Replace(" tb-item-selected", "");
+        VerAlignMiddleCss = (VerticalAlig == VerticalAlignment.Center) ? VerAlignMiddleCss + " tb-item-selected" : VerAlignMiddleCss.Replace(" tb-item-selected", "");
+        VerAlignTopCss = (VerticalAlig == VerticalAlignment.Top) ? VerAlignTopCss + " tb-item-selected" : VerAlignTopCss.Replace(" tb-item-selected", "");
+    }
+
+    /// <summary>
+    /// Binds the annotaion style properties to property panel
+    /// </summary>
+
+    public void BindAnnotationStyleProperties(TextStyle Style)
+    {
+        TextFontFamily = Style.FontFamily;
+        TextFontSize = Style.FontSize;
+        if (!Style.Color.Contains("#"))
+        {
+            int ColorValue = Color.FromName(Style.Color).ToArgb();
+            string ColorHex = string.Format("{0:x6}", ColorValue);
+            TextColor = "#" + ColorHex.Substring(2);
+        }
+        else
+        {
+            TextColor = Style.Color;
+        }
+        TextOpacity = Style.Opacity * 100;
+
+        BoldCss = (Style.Bold) ? BoldCss + " tb-item-selected" : BoldCss.Replace(" tb-item-selected", "");
+        ItalicCss = (Style.Italic) ? ItalicCss + " tb-item-selected" : ItalicCss.Replace(" tb-item-selected", "");
+        UnderlineCss = (Style.TextDecoration == TextDecoration.Underline) ? UnderlineCss + " tb-item-selected" : UnderlineCss.Replace(" tb-item-selected", "");
+
+        AlignTextLeftCss = (Style.TextAlign == TextAlign.Left) ? AlignTextLeftCss + " tb-item-selected" : AlignTextLeftCss.Replace(" tb-item-selected", "");
+        AlignTextCenterCss = (Style.TextAlign == TextAlign.Center) ? AlignTextCenterCss + " tb-item-selected" : AlignTextCenterCss.Replace(" tb-item-selected", "");
+        AlignTextRightCss = (Style.TextAlign == TextAlign.Right) ? AlignTextRightCss + " tb-item-selected" : AlignTextRightCss.Replace(" tb-item-selected", "");
+    }
+
+    /// <summary>
+    /// Binds the properties of a path annotation to property panel for connector
+    /// </summary>
+
+    public void BindConnectorAnnotationProperties(PathAnnotation Annotation)
+    {
+        TextPositionValue = GetConnectorTextPositionValue(Annotation.Offset);
+        BindAnnotationStyleProperties(Annotation.Style);
+        BindAnnotationAlignProperties(Annotation.HorizontalAlignment, Annotation.VerticalAlignment);
+    }
+
+    /// <summary>
+    ///This method is used to bind the page settings to the diagram component
+    /// </summary>
+
+    public void BindDiagramProperties()
+    {
+        SfDiagramComponent Diagram = Parent.DiagramContent.Diagram;
+        PageSettings PageSettings = Parent.DiagramContent.Diagram.PageSettings;
+        PagePortraitValue = (PageSettings.Orientation == PageOrientation.Portrait) ? true : false;
+        PageLandscapeValue = (PageSettings.Orientation == PageOrientation.Landscape) ? true : false;
+        if (!PageSettings.Background.Background.Contains("#"))
+        {
+            int ColorValue = Color.FromName(PageSettings.Background.Background).ToArgb();
+            string ColorHex = string.Format("{0:x6}", ColorValue);
+            PageBgColorValue = "#" + ColorHex.Substring(2);
+        }
+        else
+        {
+            PageBgColorValue = PageSettings.Background.Background;
+        }
+        ShowPageBreaksValue = PageSettings.ShowPageBreaks;
+    }
+
+    /// <summary>
+    /// Event handler called when the X-coordinate offset of a node changes.
+    /// </summary>
+
+    public void OnNodeOffsetXChange(Syncfusion.Blazor.Inputs.ChangeEventArgs<double> args)
+    {
+        NodeOffsetX = args.Value;
+        OnUpdateNodeProperties("OffsetX", args.Value.ToString());
+    }
+
+    /// <summary>
+    /// Event handler called when the Y-coordinate offset of a node changes.
+    /// </summary>
+
+    public void OnNodeOffsetYChange(Syncfusion.Blazor.Inputs.ChangeEventArgs<double> args)
+    {
+        NodeOffsetY = args.Value;
+        OnUpdateNodeProperties("OffsetY", args.Value.ToString());
+    }
+
+    /// <summary>
+    /// Event handler called when the Width of a node changes.
+    /// </summary>
+
+    public void OnNodeWidthChange(Syncfusion.Blazor.Inputs.ChangeEventArgs<double> args)
+    {
+        NodeWidth = args.Value;
+        OnUpdateNodeProperties("Width", args.Value.ToString());
+    }
+
+    /// <summary>
+    /// Event handler called when the height of a node changes.
+    /// </summary>
+
+    public void OnNodeHeightChange(Syncfusion.Blazor.Inputs.ChangeEventArgs<double> args)
+    {
+        NodeHeight = args.Value;
+        OnUpdateNodeProperties("Height", args.Value.ToString());
+    }
+
+    /// <summary>
+    /// Event handler called when the aspect ratio of a node changes.
+    /// </summary>
+
+    public void OnChangeAspectRatio()
+    {
+        ObservableCollection<Node> Nodes = OnSelectedNode();
+        for (int i = 0; i < Nodes.Count; i++)
+        {
+            if (!(Nodes[i].Constraints.HasFlag(NodeConstraints.AspectRatio)))
+            {
+                Nodes[i].Constraints |= NodeConstraints.AspectRatio;
+                AspectRatioIcon = "sf-icon-Lock";
+                aspectRatioCssClass += " e-active";
+                primButton = new Dictionary<string, object>()
+                {
+                    { "title", "Disable Aspect Ratio"}
+                };
+            }
+            else
+            {
+                Nodes[i].Constraints &= ~NodeConstraints.AspectRatio;
+                AspectRatioIcon = "sf-icon-Unlock";
+                aspectRatioCssClass = "e-control e-btn e-lib e-icon-btn";
+                primButton = new Dictionary<string, object>()
+                {
+                    { "title", "Enable Aspect Ratio"}
+                };
+            }
+        }
+    }
+    /// <summary>
+    /// This method used to change the fill color of the selected node.
+    /// </summary>
+    /// <param name="args">Provides the details of the choosen color/param>
+    public void OnFillColorChange(ColorPickerEventArgs args)
+    {
+        OnUpdateNodeProperties("Fill", (args.CurrentValue).Hex);
+    }
+    /// <summary>
+    /// This method used to change the stroke color of the selected node.
+    /// </summary>
+    /// <param name="args">Provides the details of the color choosen in Color picker/param>
+    public void OnStrokeColorChange(ColorPickerEventArgs args)
+    {
+
+        OnUpdateNodeProperties("StrokeColor", (args.CurrentValue).Hex);
+        OnUpdateConnectorProperties("StrokeColor", (args.CurrentValue).Hex);
+    }
+
+    /// <summary>
+    /// This method used to change the Stroke Dash Array of the selected node.
+    /// </summary>   
+
+    public void OnStrokeDashArrayChange(Syncfusion.Blazor.DropDowns.ChangeEventArgs<string, BorderStylesFields> args)
+    {
+        OnUpdateNodeProperties("StrokeDashArray", args.Value == "None" ? "":args.Value);
+        OnUpdateConnectorProperties("StrokeDashArray", args.Value == "None" ? "":args.Value);
+    }
+
+    /// <summary>
+    /// Event handler called when the opacity of a node changes.
+    /// </summary>
+    ///
+    public void OnNodeOpacityChange(double Value)
+    {
+        OnUpdateNodeProperties("Opacity", (Value / 100).ToString());
+        OnUpdateConnectorProperties("Opacity", (Value / 100).ToString());
+        NodeOpacity = Value;
+    }
+
+    /// <summary>
+    /// Event handler called when the rotation angle of a node changes.
+    /// </summary>
+    ///
+
+    public void OnNodeRotateAngleChange(Syncfusion.Blazor.Inputs.ChangeEventArgs<double> args)
+    {
+        NodeRotateAngle = args.Value;
+        OnUpdateNodeProperties("RotateAngle", args.Value.ToString());
+    }
+
+    /// <summary>
+    /// Event handler called when the stroke width of a node changes.
+    /// </summary>
+    ///
+
+    public void OnStrokeWidthChange(Syncfusion.Blazor.Inputs.ChangeEventArgs<double> args)
+    {
+        OnUpdateNodeProperties("StrokeWidth", args.Value.ToString());
+        OnUpdateConnectorProperties("StrokeWidth", args.Value.ToString());
+    }
+
+    /// <summary>
+    /// Event handler called when the gradient direction of a node changes.
+    /// </summary>
+    ///
+
+    public void OnGradientDirectionChange(MenuEventArgs args)
+    {
+        NodeGradientDirection = args.Item.Text;
+        if (args.Item.Text != null && Parent.DiagramContent.Diagram.Nodes.Count > 0)
+            OnUpdateNodeProperties("GradientDirection", args.Item.Text);
+    }
+
+    /// <summary>
+    /// Event handler called when the gradient color of a node changes.
+    /// </summary>
+    ///
+
+    public void OnNodeGradientColorChange(ColorPickerEventArgs args)
+    {
+        string Color = (args.CurrentValue).Hex;
+        NodeGradientColor = Color;
+        if(Color != null)
+            OnUpdateNodeProperties("GradientColor", Color);
+    }
+
+
+    public ObservableCollection<Node> OnSelectedNode()
+    {
+        ObservableCollection<Node> NodesCollection = new ObservableCollection<Node>();
+        SfDiagramComponent Diagram = Parent.DiagramContent.Diagram;
+        DiagramSelectionSettings SelectedItems = Diagram.SelectionSettings;
+        for (int i = 0; i < SelectedItems.Nodes.Count; i++)
+        {
+            Node? node = Diagram.GetObject(SelectedItems.Nodes[i].ID) as Node;
+            if (node != null)
+            {
+                NodesCollection.Add(node);
+            }
+        }
+        return NodesCollection;
+    }
+
+    /// <summary>
+    /// Updates a specific property of a node with the provided value.
+    /// </summary>
+    /// <param name="prop">The name of the property to be updated.</param>
+    /// <param name="Value">The new value to set for the specified property.</param>
+
+    public void OnUpdateNodeProperties(string prop, string Value)
+    {
+        if (!PreventPropertyChange)
+        {
+            SfDiagramComponent Diagram = Parent.DiagramContent.Diagram;
+            // Diagram.StartGroupAction();
+            Diagram.BeginUpdate();
+            ObservableCollection<Node> Nodes = OnSelectedNode();
+
+            if (Nodes.Count > 0)
+            {
+                Node Node = Nodes[0];
+                switch (prop)
+                {
+                    case "OffsetX":
+                        Node.OffsetX = Double.Parse(Value);
+                        break;
+                    case "OffsetY":
+                        Node.OffsetY = Double.Parse(Value);
+                        break;
+                    case "Width":
+                        Node.Width = Double.Parse(Value);
+                        break;
+                    case "Height":
+                        Node.Height = Double.Parse(Value);
+                        break;
+                    case "RotateAngle":
+                        Node.RotationAngle = Double.Parse(Value);
+                        break;
+                }
+                for (int i = 0; i < Nodes.Count; i++)
+                {
+                    Node = Nodes[i];
+                    if (Node != null)
+                    {
+                        switch (prop)
+                        {
+                            case "Fill":
+                                Node.Style.Fill = Value;
+                                NodeFillColor = Value;
+                                if(gradientStyleClass == "row db-prop-row db-gradient-style-show" && NodeGradientDirection != null && NodeGradientColor != null)
+                                {
+                                    GetGradient(NodeGradientDirection, NodeGradientColor);
+                                }
+                                break;
+                            case "StrokeColor":
+                                NodeStrokeColor = Value;
+                                Node.Style.StrokeColor = Value;
+
+                                break;
+                            case "StrokeDashArray":
+                                Node.Style.StrokeDashArray = Value;
+                                UpdateNodeStrokeStyle(Value);
+                                break;
+                            case "StrokeWidth":
+                                NodeStrokeWidth = Double.Parse(Value);
+                                Node.Style.StrokeWidth = Double.Parse(Value);
+                                break;
+                            case "Opacity":
+                                Node.Style.Opacity = Double.Parse(Value);
+                                break;
+                            case "Gradient":
+                                if (Value == "false")
+                                {
+                                    Node.Style.Gradient = null;
+
+                                }
+                                else
+                                {
+                                    if (NodeGradientDirection != null && NodeGradientColor != null)
+                                    {
+                                        GetGradient(NodeGradientDirection, NodeGradientColor);
+                                    }
+                                }
+                                break;
+                            case "GradientDirection":
+                            case "GradientColor":
+                                if (NodeGradientDirection != null && NodeGradientColor != null)
+                                    GetGradient(NodeGradientDirection, NodeGradientColor != "" ? NodeGradientColor : "" );
+                                break;
+                        }
+                    }
+                }
+            }
+            Diagram.EndUpdate();
+            //Diagram.EndGroupAction();
+        }
+    }
+
+    // <summary>
+    /// This method is used to set the Stroke style of the node
+    /// </summary>
+    ///
+
+    private void UpdateNodeStrokeStyle(string strokeVal)
+    {
+        switch (strokeVal)
+        {
+            case "1,2":
+                NodeStrokeDashArray = "1,2";
+                NodeStrokeStyle = 1;
+                break;
+            case "3,3":
+                NodeStrokeDashArray = "3,3";
+                NodeStrokeStyle = 2;
+                break;
+            case "5,3":
+                NodeStrokeDashArray = "5,3";
+                NodeStrokeStyle = 3;
+                break;
+            case "4,4,1":
+                NodeStrokeDashArray = "4,4,1";
+                NodeStrokeStyle = 4;
+                break;
+            default:
+                NodeStrokeDashArray = "";
+                NodeStrokeStyle = 0;
+                break;
+        }
+    }
+
+    // <summary>
+    /// This method is used to set the Stroke style of the connector
+    /// </summary>
+    ///
+
+    private void UpdateConnectorStrokeStyle(string strokeVal)
+    {
+        switch (strokeVal)
+        {
+            case "1,2":
+                ConnectorStrokeDashArray = "1,2";
+                ConnectorStrokeStyle = 1;
+                break;
+            case "3,3":
+                ConnectorStrokeDashArray = "3,3";
+                ConnectorStrokeStyle = 2;
+                break;
+            case "5,3":
+                ConnectorStrokeDashArray = "5,3";
+                ConnectorStrokeStyle = 3;
+                break;
+            case "4,4,1":
+                ConnectorStrokeDashArray = "4,4,1";
+                ConnectorStrokeStyle = 4;
+                break;
+            default:
+                ConnectorStrokeDashArray = "";
+                ConnectorStrokeStyle = 0;
+                break;
+        }
+    }
+    public void GetGradient(string GradientDirection, string ColorValue)
+    {
+        LinearGradientBrush gradientValue = GetGradientDirectionValue(GradientDirection);
+        ObservableCollection<Node> Nodes = OnSelectedNode();
+        for (int i = 0; i < Nodes.Count; i++)
+        {
+            Nodes[i].Style.Gradient = new LinearGradientBrush()
+            {
+                X1 = gradientValue.X1,
+                X2 = gradientValue.X2,
+                Y1 = gradientValue.Y1,
+                Y2 = gradientValue.Y2,
+                GradientStops  = new DiagramObjectCollection<GradientStop>()
+                {
+                    new GradientStop(){Color = NodeFillColor, Offset=0},
+                    new GradientStop(){Color = ColorValue, Offset=1}
+                }
+            };
+        }
+    }
+
+    /// <summary>
+    /// Gets the numeric value representing the gradient direction based on the provided string direction.
+    /// </summary>
+    /// <param name="Direction">The string direction representing the gradient direction.</param>
+
+    public LinearGradientBrush GetGradientDirectionValue(string Direction)
+    {
+        LinearGradientBrush GradientValue = new LinearGradientBrush();
+        int x1 = 0; int x2 = 0; int y1 = 0; int y2 = 0;
+        if (Direction == "Left To Right")
+        {
+            x1 = 100;
+            NodeGradientDircIndex = 3;
+        }
+        else if (Direction == "Bottom To Top")
+        {
+            y2 = 100;
+            NodeGradientDircIndex = 0;
+        }
+        else if (Direction == "Right To Left")
+        {
+            x2 = 100;
+            NodeGradientDircIndex = 2;
+        }
+        else
+        {
+            y1 = 100;
+            NodeGradientDircIndex = 1;
+        }
+        GradientValue = new LinearGradientBrush() { X1 = x1, Y1 = y1, X2 = x2, Y2 = y2 };
+        return GradientValue;
+    }
+
+    public string GetGradientDirection(LinearGradientBrush GradientValue)
+    {
+        string direction = "";
+        if (GradientValue.Y1 == 0 && GradientValue.Y2 == 0)
+        {
+            direction = (GradientValue.X1 == 100 && GradientValue.X2 == 0) ? "LeftToRight" : "RightToLeft";
+            NodeGradientDircIndex = (GradientValue.X1 == 100 && GradientValue.X2 == 0) ? 3 : 2;
+        }
+        else
+        {
+            direction = (GradientValue.Y1 == 100 && GradientValue.Y2 == 0) ? "TopToBottom" : "BottomToTop";
+            NodeGradientDircIndex = (GradientValue.Y1 == 100 && GradientValue.Y2 == 0) ? 1 : 0;
+        }
+        return direction;
+    }    
+
+    private async Task ToolbarInsertClick(Syncfusion.Blazor.Navigations.ClickEventArgs args)
+    {
+        string commandType = args.Item.TooltipText;
+        ObservableCollection<Node> Nodes = OnSelectedNode();
+        for (int i = 0; i < Nodes.Count; i++)
+        {
+            Node Node = Nodes[i];
+            if (Node != null)
+            {
+                switch (commandType)
+                {
+                    case "Insert Link":
+                        if(jsRuntime != null )
+                        {
+                            await jsRuntime.InvokeAsync<object>("setHyperLinkValuesToDocument", "hyperlink", "");
+                            await jsRuntime.InvokeAsync<object>("setHyperLinkValuesToDocument", "hyperlinkText", "");
+                        }
+                        Node.Annotations = new DiagramObjectCollection<ShapeAnnotation>() { new ShapeAnnotation() { Hyperlink = new HyperlinkSettings() { Url = "" , Content = ""} } };
+                        if (TextHyperLink != null)
+                        {
+                            await TextHyperLink.ShowAsync();
+                        }
+                        if (Node.Annotations.Count > 0)
+                        {
+                            ShapeAnnotation Annotation = Node.Annotations[0];
+                            if (Annotation!= null && Annotation.Hyperlink!= null &&  (Annotation.Hyperlink.Url != null || Annotation.Hyperlink.Content != null))
+                            {
+                                string Content = Annotation.Hyperlink?.Content ?? Annotation.Hyperlink?.Url ?? "";
+                                if (jsRuntime != null)
+                                {
+                                    await jsRuntime.InvokeAsync<object>("setHyperLinkValuesToDocument", "hyperlink", Annotation.Hyperlink?.Url);
+                                    await jsRuntime.InvokeAsync<object>("setHyperLinkValuesToDocument", "hyperlinkText", Content);
+                                }
+                            }
+                        }
+                        break;
+                    case "Insert Image":
+                        await Parent.MenuBar.OpenUploadBox(true, "");
+                        break;
+                }
+            }
+        }   
+    }
+
+    /// <summary>
+    /// Inserts a hyperlink into the selected node.
+    /// </summary>
+    private async Task InsertLink()
+    {
+        ObservableCollection<Node> Nodes = OnSelectedNode();
+        for (int i = 0; i < Nodes.Count; i++)
+        {
+            Node Node = Nodes[i];
+            if (Node != null)
+            {
+                if (jsRuntime != null)
+                {
+                    await jsRuntime.InvokeAsync<object>("setHyperLinkValuesToDocument", "hyperlink", "");
+                    await jsRuntime.InvokeAsync<object>("setHyperLinkValuesToDocument", "hyperlinkText", "");
+                }
+                if(Node.Annotations.Count == 0 )
+                    Node.Annotations = new DiagramObjectCollection<ShapeAnnotation>() { new ShapeAnnotation() { Content = "" } };
+                if (TextHyperLink != null)
+                {
+                    await TextHyperLink.ShowAsync();
+                }
+                if (Node.Annotations.Count > 0)
+                {
+                    if (Node.Annotations[0].Hyperlink == null)
+                        Node.Annotations[0].Hyperlink = new HyperlinkSettings() { Url = "", Content = "" };
+                    ShapeAnnotation Annotation = Node.Annotations[0];
+                    if (Annotation != null && Annotation.Hyperlink != null)
+                    {
+                        if ((Annotation.Hyperlink != null && Annotation.Hyperlink.Url != null) || (Annotation.Hyperlink != null && Annotation.Hyperlink.Content != null))
+                        {
+                            string Content = (Annotation.Hyperlink.Content != null && Annotation.Hyperlink.Content != "") ? Annotation.Hyperlink.Content : Annotation.Content;
+                            if (jsRuntime != null)
+                            {
+                                await jsRuntime.InvokeAsync<object>("setHyperLinkValuesToDocument", "hyperlink", Annotation.Hyperlink.Url);
+                                await jsRuntime.InvokeAsync<object>("setHyperLinkValuesToDocument", "hyperlinkText", Content);
+                            }
+                        }
+                    }
+                }               
+            }
+        }
+    }
+
+
+    /// <summary>
+    /// This method is usedd to apply the annotation hyperlink
+    /// </summary>
+
+    public async Task ApplyAnnotationLink()
+    {
+        SfDiagramComponent Diagram = Parent.DiagramContent.Diagram;
+        ObservableCollection<Node> Nodes = OnSelectedNode();
+        for (int i = 0; i < Nodes.Count; i++)
+        {
+            if (Nodes[i].Annotations.Count > 0)
+            {
+                ShapeAnnotation Annotation = Nodes[i].Annotations[0];
+                string HyperLink = await jsRuntime!.InvokeAsync<string>("getHyperLinkValueFromDocument", "hyperlink", "value");
+                string HyperLinkText = await jsRuntime!.InvokeAsync<string>("getHyperLinkValueFromDocument", "hyperlinkText", "value");
+                string hyperlinkContent = (HyperLinkText != "") ? HyperLinkText : HyperLink;
+                if (HyperLink != null && HyperLink != "")
+                {
+                    Nodes[i].Annotations[0] = new ShapeAnnotation() { Hyperlink = new Syncfusion.Blazor.Diagram.HyperlinkSettings() { Url = HyperLink, Content = HyperLinkText }, Content = hyperlinkContent };
+                }else
+                {
+                    Nodes[i].Annotations[0] = new ShapeAnnotation() { Hyperlink=null, Content = hyperlinkContent };
+                }
+            }
+        }
+        if (TextHyperLink != null)
+        {
+            await TextHyperLink.HideAsync();
+        }
+    }
+
+    public async Task CancelAnnotationLink()
+    {
+        if (TextHyperLink != null)
+        {
+            await TextHyperLink.HideAsync();
+        }
+    }
+
+    /// <summary>
+    /// Event handler called when the font family changes.
+    /// </summary>   
+    public void OnFontFamilyChange(Syncfusion.Blazor.DropDowns.ChangeEventArgs<string, FontFamilyListFields> args)
+    {
+        OnUpdateTextProperties("FontFamily", args.Value);
+    }
+
+    /// <summary>
+    /// Event handler called when the font size changes.
+    /// </summary>   
+
+    public void OnTextFontSizeChanged(Syncfusion.Blazor.Inputs.ChangeEventArgs<double> args)
+    {
+        TextFontSize = args.Value;
+        OnUpdateTextProperties("FontSize", args.Value.ToString());
+    }
+
+
+    /// <summary>
+    /// Event handler called when the text position changes.
+    /// </summary>
+
+    public void OnTextPositionChange(Syncfusion.Blazor.DropDowns.ChangeEventArgs<string, TextPositionFields> args)
+    {
+        OnUpdateTextProperties("TextPosition", args.Value);
+    }
+
+
+    /// <summary>
+    /// Event handler called when the font color changes.
+    /// </summary>
+    public void OnTextColorChange(ColorPickerEventArgs args)
+    {
+        TextColor = (args.CurrentValue).Hex;
+        OnUpdateTextProperties("FontColor", (args.CurrentValue).Hex);
+        UpdatePropertyPanel();
+    }
+
+
+    /// <summary>
+    /// Event handler called when the text opacity changes.
+    /// </summary>
+    public void OnTextOpacityChange(double Value)
+    {
+        OnUpdateTextProperties("Opacity", (Value / 100).ToString());
+        TextOpacity = Value;
+    }
+
+
+    /// <summary>
+    /// Method to update the text properties to the sleclect node/connector
+    /// </summary>
+    public void OnUpdateTextProperties(string prop, string Value)
+    {
+        ObservableCollection<Node> Nodes = OnSelectedNode();
+        OnUpdateNodeTextProperties(prop, Value);
+        OnUpdateConnectorTextProperties(prop, Value);
+    }
+
+
+    /// <summary>
+    /// Method to update the text content to the selected annotation.
+    /// </summary>
+
+    public void OnUpdateTextContentProperties(string prop, string Value)
+    {
+        if (!PreventPropertyChange)
+        {
+            ObservableCollection<Node> Nodes = OnSelectedNode();
+            SfDiagramComponent Diagram = Parent.DiagramContent.Diagram;
+            Diagram.BeginUpdate();
+            for (int i = 0; i < Nodes.Count; i++)
+            {
+                ShapeAnnotation Annotation = Nodes[i].Annotations[0];
+                switch (prop)
+                {
+                    case "FontFamily":
+                        Annotation.Style.FontFamily = Value;
+                        break;
+                    case "FontSize":
+                        Annotation.Style.FontSize = Int32.Parse(Value);
+                        break;
+                    case "TextPosition":
+                        Annotation.Offset = GetNodeAnnotationOffset(Value);
+                        break;
+                    case "FontColor":
+                        Annotation.Style.Color = Value;
+                        break;
+                    case "Opacity":
+                        Annotation.Style.Opacity = Double.Parse(Value);
+                        break;
+                }
+            }
+            Diagram.EndUpdate();
+
+        }
+    }
+
+    /// <summary>
+    /// This method is used to update the text properties of a node.
+    /// </summary>
+
+    public void OnUpdateNodeTextProperties(string prop, string Value)
+    {
+        if (!PreventPropertyChange)
+        {
+            ObservableCollection<Node> Nodes = OnSelectedNode();
+            for (int i = 0; i < Nodes.Count; i++)
+            {
+                if (Nodes[i].Annotations.Count > 0 || Nodes[i].Shape is TextShape)
+                {
+                    Parent.DiagramContent.Diagram.BeginUpdate();
+                    ShapeAnnotation Annotation = new ShapeAnnotation();
+                    if (Nodes[i].Annotations.Count > 0)
+                        Annotation = Nodes[i].Annotations[0];
+
+                    TextStyle ContentStyle = new TextStyle();
+                    if (Annotation != null)
+                    {
+                        ContentStyle = Annotation.Style;
+                    }
+                    else if (Nodes[i].Style is TextStyle textStyle)
+                    {
+                        ContentStyle = textStyle;
+                    }
+
+                    switch (prop)
+                    {
+                        case "FontFamily":
+                            ContentStyle.FontFamily = Value;
+                            break;
+                        case "FontSize":
+                            ContentStyle.FontSize = Int32.Parse(Value);
+                            break;
+                        case "TextPosition":
+                            if(Annotation!= null && Annotation.Offset != null)
+                            {
+                                Annotation.Offset = GetNodeAnnotationOffset(Value);
+                            }
+                            break;
+                        case "FontColor":
+                            ContentStyle.Color = Value;
+                            break;
+                        case "Opacity":
+                            ContentStyle.Opacity = Double.Parse(Value);
+                            break;
+                    }                   
+                    Parent.DiagramContent.Diagram.EndUpdate();
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// This method is used to update the text properties of a connector.
+    /// </summary>
+    public void OnUpdateConnectorTextProperties(string prop, string Value)
+    {
+        if (!PreventPropertyChange)
+        {
+            ObservableCollection<Connector> Connectors = OnSelectedConnector();
+            for (int i = 0; i < Connectors.Count; i++)
+            {
+                if (Connectors[i].Annotations.Count > 0)
+                {
+                    PathAnnotation Annotation = Connectors[i].Annotations[0];
+                    switch (prop)
+                    {
+                        case "FontFamily":
+                            Annotation.Style.FontFamily = Value;
+                            break;
+                        case "FontSize":
+                            Annotation.Style.FontSize = Int32.Parse(Value);
+                            break;
+                        case "TextPosition":
+                            Annotation.Offset = GetConnectorAnnotationOffset(Value);
+                            break;
+                        case "FontColor":
+                            Annotation.Style.Color = Value;
+                            break;
+                        case "Opacity":
+                            Annotation.Style.Opacity = Double.Parse(Value);
+                            break;
+                    }
+                }
+            }
+        }
+    }
+
+
+    /// <summary>
+    /// Event handler called when a text style is selected.
+    /// </summary>
+    private void OnTextStyleClick(Syncfusion.Blazor.Navigations.ClickEventArgs args)
+    {
+        string commandType = args.Item.TooltipText;
+
+        switch (commandType)
+        {
+            case "Bold":
+                BoldCss = (!BoldCss.Contains(" tb-item-selected")) ? BoldCss + " tb-item-selected" : BoldCss.Replace(" tb-item-selected", "");
+                break;
+            case "Italic":
+                ItalicCss = (!ItalicCss.Contains(" tb-item-selected")) ? ItalicCss + " tb-item-selected" : ItalicCss.Replace(" tb-item-selected", "");
+                break;
+            case "Underline":
+                UnderlineCss = (!UnderlineCss.Contains(" tb-item-selected")) ? UnderlineCss + " tb-item-selected" : UnderlineCss.Replace(" tb-item-selected", "");
+                break;
+        }
+        OnNodeTextStyle(commandType);
+        OnConnectorTextStyle(commandType);
+    }
+
+
+    /// <summary>
+    /// This method is called when a node text style is changed.
+    /// </summary>
+    private void OnNodeTextStyle(string commandType)
+    {
+        ObservableCollection<Node> Nodes = OnSelectedNode();
+        for (int i = 0; i < Nodes.Count; i++)
+        {
+            Node Node = Nodes[i];
+            if (Node != null && (Node.Annotations.Count > 0 || Node.Shape is TextShape ))
+            {
+                if (Node.Shape is TextShape && Node.Style is TextStyle textStyle)
+                {
+                         OnAnnotationTextStyle(commandType, textStyle);
+                }
+                else if (Node.Annotations != null && Node.Annotations.Count> 0 &&  Node.Annotations[0].Style != null)
+                {
+                        OnAnnotationTextStyle(commandType, Node.Annotations[0].Style);
+                }
+            }
+        }
+    }
+
+
+    /// <summary>
+    /// This method is called when a connector text style is changed.
+    /// </summary>
+    private void OnConnectorTextStyle(string commandType)
+    {
+        ObservableCollection<Connector> Connectors = OnSelectedConnector();
+        for (int i = 0; i < Connectors.Count; i++)
+        {
+            Connector Connector = Connectors[i];
+            if (Connector != null && Connector.Annotations.Count > 0)
+            {
+                OnAnnotationTextStyle(commandType, Connector.Annotations[0].Style);
+            }
+        }
+    }
+
+    private async void OnAnnotationTextStyle(string commandType, TextStyle Style) {
+        Parent.DiagramContent.Diagram.BeginUpdate();
+        switch (commandType)
+        {
+            case "Bold":
+                Style.Bold = !Style.Bold;
+                break;
+            case "Italic":
+                Style.Italic = !Style.Italic;
+                break;
+            case "Underline":
+                Style.TextDecoration = (Style.TextDecoration == TextDecoration.Underline) ? TextDecoration.None : TextDecoration.Underline;
+                break;
+            case "Align Text Left":
+                Style.TextAlign = TextAlign.Left;
+                break;
+            case "Align Text Center":
+                Style.TextAlign = TextAlign.Center;
+                break;
+            case "Align Text Right":
+                Style.TextAlign = TextAlign.Right;
+                break;
+        }
+        await Parent.DiagramContent.Diagram.EndUpdate();
+    }
+
+
+    /// <summary>
+    /// Event handler called when a text alignement is selected.
+    /// </summary>
+
+    private void OnTextSubAlignmentClick(Syncfusion.Blazor.Navigations.ClickEventArgs args)
+    {
+        string commandType = args.Item.TooltipText;
+        AlignTextLeftCss = AlignTextLeftCss.Replace(" tb-item-selected", "");
+        AlignTextCenterCss = AlignTextCenterCss.Replace(" tb-item-selected", "");
+        AlignTextRightCss = AlignTextRightCss.Replace(" tb-item-selected", "");
+        switch (commandType)
+        {
+            case "Align Text Left":
+                AlignTextLeftCss += " tb-item-selected";
+                break;
+            case "Align Text Center":
+                AlignTextCenterCss += " tb-item-selected";
+                break;
+            case "Align Text Right":
+                AlignTextRightCss += " tb-item-selected";
+                break;
+        }
+        OnNodeTextStyle(commandType);
+        OnConnectorTextStyle(commandType);
+    }
+
+    private void OnTextAlignmentClick(Syncfusion.Blazor.Navigations.ClickEventArgs args)
+    {
+        string commandType = args.Item.TooltipText;
+        if (commandType == "Align Right" || commandType == "Align Center" || commandType == "Align Left")
+        {
+            HorAlignLeftCss = HorAlignLeftCss.Replace(" tb-item-selected", "");
+            HorAlignCenterCss = HorAlignCenterCss.Replace(" tb-item-selected", "");
+            HorAlignRightCss = HorAlignRightCss.Replace(" tb-item-selected", "");
+        }
+        else {
+            VerAlignBottomCss = VerAlignBottomCss.Replace(" tb-item-selected", "");
+            VerAlignMiddleCss = VerAlignMiddleCss.Replace(" tb-item-selected", "");
+            VerAlignTopCss = VerAlignTopCss.Replace(" tb-item-selected", "");
+        }
+        switch (commandType)
+        {
+            case "Align Right":
+                HorAlignRightCss += " tb-item-selected";
+                break;
+            case "Align Center":
+                HorAlignCenterCss += " tb-item-selected";
+                break;
+            case "Align Left":
+                HorAlignLeftCss += " tb-item-selected";
+                break;
+            case "Align Top":
+                VerAlignTopCss += " tb-item-selected";
+                break;
+            case "Align Middle":
+                VerAlignMiddleCss += " tb-item-selected";
+                break;
+            case "Align Bottom":
+                VerAlignBottomCss += " tb-item-selected";
+                break;
+        }
+        OnNodeTextAlignment(args);
+        OnConnectorTextAlignment(args);
+    }
+    private async void OnNodeTextAlignment(Syncfusion.Blazor.Navigations.ClickEventArgs args)
+    {
+        string commandType = args.Item.TooltipText;
+        ObservableCollection<Node> Nodes = OnSelectedNode();
+        for (int i = 0; i < Nodes.Count; i++)
+        {
+            Node Node = Nodes[i];
+            if ((Node != null && Node.Annotations.Count > 0))
+            {
+                ShapeAnnotation NodeAnnotation = Node.Annotations[0];
+                Parent.DiagramContent.Diagram.BeginUpdate();
+                switch (commandType)
+                {
+                    case "Align Right":
+                        NodeAnnotation.HorizontalAlignment = HorizontalAlignment.Right;
+                        break;
+                    case "Align Center":
+                        NodeAnnotation.HorizontalAlignment = HorizontalAlignment.Center;
+                        break;
+                    case "Align Left":
+                        NodeAnnotation.HorizontalAlignment = HorizontalAlignment.Left;
+                        break;
+                    case "Align Top":
+                        NodeAnnotation.VerticalAlignment = VerticalAlignment.Top;
+                        break;
+                    case "Align Middle":
+                        NodeAnnotation.VerticalAlignment = VerticalAlignment.Center;
+                        break;
+                    case "Align Bottom":
+                        NodeAnnotation.VerticalAlignment = VerticalAlignment.Bottom;
+                        break;
+                }
+                await Parent.DiagramContent.Diagram.EndUpdate();
+            }
+        }
+    }
+    private void OnConnectorTextAlignment(Syncfusion.Blazor.Navigations.ClickEventArgs args)
+    {
+        string commandType = args.Item.TooltipText;
+        ObservableCollection<Connector> Connectors = OnSelectedConnector();
+        for (int i = 0; i < Connectors.Count; i++)
+        {
+            Connector Connector = Connectors[i];
+            if ((Connector != null && Connector.Annotations.Count > 0))
+            {
+                PathAnnotation ConnectorAnnotation = Connector.Annotations[0];
+                switch (commandType)
+                {
+                    case "Align Right":
+                        ConnectorAnnotation.HorizontalAlignment = HorizontalAlignment.Right;
+                        break;
+                    case "Align Center":
+                        ConnectorAnnotation.Style.TextAlign = TextAlign.Center;
+                        break;
+                    case "Align Left":
+                        ConnectorAnnotation.Style.TextAlign = TextAlign.Center;
+                        break;
+                    case "Align Top":
+                        ConnectorAnnotation.Style.TextAlign = TextAlign.Center;
+                        break;
+                    case "Align Middle":
+                        ConnectorAnnotation.Style.TextAlign = TextAlign.Center;
+                        break;
+                    case "Align Bottom":
+                        ConnectorAnnotation.Style.TextAlign = TextAlign.Center;
+                        break;
+                }
+            }
+        }
+    }
+
+    // <summary>
+    /// Sets the node annotation offset value.
+    /// </summary>
+
+    public Syncfusion.Blazor.Diagram.DiagramPoint GetNodeAnnotationOffset(string Value)
+    {
+        Syncfusion.Blazor.Diagram.DiagramPoint Offset;
+        switch (Value)
+        {
+            case "TopLeft":
+                Offset = new Syncfusion.Blazor.Diagram.DiagramPoint() { X = 0, Y = 0 };
+                break;
+            case "TopCenter":
+                Offset = new Syncfusion.Blazor.Diagram.DiagramPoint() { X = 0.5, Y = 0 };
+                break;
+            case "TopRight":
+                Offset = new Syncfusion.Blazor.Diagram.DiagramPoint() { X = 1, Y = 0 };
+                break;
+            case "MiddleLeft":
+                Offset = new Syncfusion.Blazor.Diagram.DiagramPoint() { X = 0, Y = 0.5 };
+                break;
+            case "MiddleRight":
+                Offset = new Syncfusion.Blazor.Diagram.DiagramPoint() { X = 1, Y = 0.5 };
+                break;
+            case "BottomLeft":
+                Offset = new Syncfusion.Blazor.Diagram.DiagramPoint() { X = 0, Y = 1 };
+                break;
+            case "BottomCenter":
+                Offset = new Syncfusion.Blazor.Diagram.DiagramPoint() { X = 0.5, Y = 1.25 };
+                break;
+            case "BottomRight":
+                Offset = new Syncfusion.Blazor.Diagram.DiagramPoint() { X = 1, Y = 1 };
+                break;
+            default:
+                Offset = new Syncfusion.Blazor.Diagram.DiagramPoint() { X = 0.5, Y = 0.5 };
+                break;
+        }
+        return Offset;
+    }
+
+    /// <summary>
+    /// Gets the numeric value representing the position of the text within a node.
+    /// </summary>
+
+    public string GetNodeTextPositionValue(Syncfusion.Blazor.Diagram.DiagramPoint Offset)
+    {
+        string Position = "Center";
+        switch (Offset.Y) {
+            case 0:
+                switch (Offset.X)
+                {
+                    case 0:
+                        Position = "TopLeft";
+                        break;
+                    case 0.5:
+                        Position = "TopCenter";
+                        break;
+                    case 1:
+                        Position = "TopRight";
+                        break;
+                }
+                break;
+            case 0.5:
+                switch (Offset.X)
+                {
+                    case 0:
+                        Position = "MiddleLeft";
+                        break;
+                    case 0.5:
+                        Position = "Center";
+                        break;
+                    case 1:
+                        Position = "MiddleRight";
+                        break;
+                }
+                break;
+            case 1:
+            case 1.25:
+                switch (Offset.X)
+                {
+                    case 0:
+                        Position = "BottomLeft";
+                        break;
+                    case 0.5:
+                        Position = "BottomCenter";
+                        break;
+                    case 1:
+                        Position = "BottomRight";
+                        break;
+                }
+                break;
+        }
+        return Position;
+    }
+
+    // <summary>
+    /// Sets the node annotation offset value.
+    /// </summary>
+
+    public double GetConnectorAnnotationOffset(string Value)
+    {
+        double Offset;
+        switch (Value)
+        {
+            case "Before":
+                Offset = 0;
+                break;
+            case "Center":
+                Offset = 0.5;
+                break;
+            case "After":
+                Offset = 1;
+                break;
+            default:
+                Offset = 0.5;
+                break;
+        }
+        return Offset;
+    }
+
+    /// <summary>
+    /// Gets the numeric value representing the position of the text within a connector.
+    /// </summary>
+
+    public string GetConnectorTextPositionValue(double Offset)
+    {
+        string Position;
+        switch (Offset) {
+            case 0:
+                Position = "Before";
+                break;
+            case 0.5:
+                Position = "Center";
+                break;
+            case 1:
+                Position = "After";
+                break;
+            default:
+                Position = "Center";
+                break;
+        }
+        return Position;
+    }
+
+
+    // Connector Properties
+
+    /// <summary>
+    /// Event handler called when the type of a connector changes.
+    /// </summary>
+
+    public void OnConnectorTypeChange(Syncfusion.Blazor.DropDowns.ChangeEventArgs<string, LineTypeFields> args)
+    {
+        OnUpdateConnectorProperties("Type", args.Value);
+    }
+
+    /// <summary>
+    /// Event handler called when the opacity of a connector changes.
+    /// </summary>
+    public void OnConnectorOpacityChange(double Value)
+    {
+        OnUpdateConnectorProperties("Opacity", (Value / 100).ToString());
+        ConnectorOpacity = Value;
+    }
+
+    /// <summary>
+    /// Event handler called when the source shape of a connector changes.
+    /// </summary>
+
+    public void OnConnectorSourceShapeChange(Syncfusion.Blazor.DropDowns.ChangeEventArgs<string, DecoratorListFields> args)
+    {
+        if (args.IsInteracted)
+        {
+            OnUpdateConnectorProperties("SourceDecoratorShape", args.Value);
+        }
+    }
+
+    /// <summary>
+    /// Event handler called when the source shape size of a connector changes.
+    /// </summary>
+
+    public void OnConnectorSourceShapeSizeChange(Syncfusion.Blazor.Inputs.ChangeEventArgs<double> args)
+    {
+        ConnectorSrcShapeSize = args.Value;
+        OnUpdateConnectorProperties("SourceDecoratorSize", args.Value.ToString());
+    }
+
+    /// <summary>
+    /// Event handler called when the target shape of a connector changes.
+    /// </summary>
+
+    public void OnConnectorTargetShapeChange(Syncfusion.Blazor.DropDowns.ChangeEventArgs<string, DecoratorListFields> args)
+    {
+        if (args.IsInteracted)
+        {
+            OnUpdateConnectorProperties("TargetDecoratorShape", args.Value);
+        }
+    }
+
+    /// <summary>
+    /// Event handler called when the target shape size of a connector changes.
+    /// </summary>
+
+    public void OnConnectorTargetShapeSizeChange(Syncfusion.Blazor.Inputs.ChangeEventArgs<double> args)
+    {
+        ConnectortarShapeSize = args.Value;
+        OnUpdateConnectorProperties("TargetDecoratorSize", args.Value.ToString());
+    }
+
+    /// <summary>
+    /// Enables the bridging porperty of a connector
+    /// </summary>
+
+    public void OnConnectorBridgingChange(Microsoft.AspNetCore.Components.ChangeEventArgs args)
+    {
+
+        SfDiagramComponent Diagram = Parent.DiagramContent.Diagram;
+        if (args != null && args.Value != null)
+        {
+            OnUpdateConnectorProperties("Bridging", args.Value?.ToString() ?? "");
+            enableProperty("lineJumpSizeDiv", args.Value?.ToString() == "True" ? true : false);
+        }
+    }
+    public void enableProperty(string id, bool value)
+    {
+        if (value) 
+        {
+            if (id == "gradientStyle") 
+            {
+                gradientStyleClass = "row db-prop-row db-gradient-style-show";
+            } 
+            else 
+            {
+                lineJumpSizeDivDisplay = "block";
+            }
+        }
+        else 
+        {
+            if (id == "gradientStyle") 
+            {
+                gradientStyleClass = "row db-prop-row db-gradient-style-hide";
+            } else 
+            {
+                lineJumpSizeDivDisplay = "none";
+            }
+        }
+    }
+    public void OnConnectorBridgeSizeChange(Syncfusion.Blazor.Inputs.ChangeEventArgs<double> args)
+    {
+        ConnectorBridgeSize = args.Value;
+        OnUpdateConnectorProperties("BridgeSpace", args.Value.ToString());
+    }
+
+    /// <summary>
+    /// Method used to update the properties of a connector.
+    /// </summary>
+
+    public void OnUpdateConnectorProperties(string prop, string Value)
+    {
+        if (!PreventPropertyChange)
+        {
+            SfDiagramComponent diagram = Parent.DiagramContent.Diagram;
+            ObservableCollection<Connector> Connectors = OnSelectedConnector();
+            for (int i = 0; i < Connectors.Count; i++)
+            {
+                Connector Connector = Connectors[i];
+                switch (prop)
+                {
+                    case "Type":
+                        Connector.Type = (Value == "Straight") ? ConnectorSegmentType.Straight : ((Value == "Orthogonal") ? ConnectorSegmentType.Orthogonal : ConnectorSegmentType.Bezier);
+                        break;
+                    case "StrokeColor":
+                        ConnectorStrokeColor = Value;
+                        Connector.Style.StrokeColor = Value;
+                        break;
+                    case "StrokeDashArray":
+                        Connector.Style.StrokeDashArray = Value;
+                        UpdateConnectorStrokeStyle(Value);
+                        break;
+                    case "StrokeWidth":
+                        ConnectorStrokeWidth = Connector.Style.StrokeWidth = Connector.SourceDecorator.Style.StrokeWidth = Connector.TargetDecorator.Style.StrokeWidth = Double.Parse(Value);
+                        break;
+                    case "SourceDecoratorShape":
+                        switch (Value)
+                        {
+                            case "None":
+                                Connector.SourceDecorator.Shape = DecoratorShape.None;
+                                break;
+                            case "Arrow":
+                                Connector.SourceDecorator.Shape = DecoratorShape.Arrow;
+                                break;
+                            case "Diamond":
+                                Connector.SourceDecorator.Shape = DecoratorShape.Diamond;
+                                break;
+                            case "OpenArrow":
+                                Connector.SourceDecorator.Shape = DecoratorShape.OpenArrow;
+                                break;
+                            case "Circle":
+                                Connector.SourceDecorator.Shape = DecoratorShape.Circle;
+                                break;
+                            case "Square":
+                                Connector.SourceDecorator.Shape = DecoratorShape.Square;
+                                break;
+                            case "DoubleArrow":
+                                Connector.SourceDecorator.Shape = DecoratorShape.DoubleArrow;
+                                break;
+                            case "Fletch":
+                                Connector.SourceDecorator.Shape = DecoratorShape.Fletch;
+                                break;
+                            case "OpenFetch":
+                                Connector.SourceDecorator.Shape = DecoratorShape.OpenFletch;
+                                break;
+                            case "IndentedArrow":
+                                Connector.SourceDecorator.Shape = DecoratorShape.InArrow;
+                                break;
+                            case "OutdentedArrow":
+                                Connector.SourceDecorator.Shape = DecoratorShape.OutArrow;
+                                break;
+                        }
+                        break;
+                    case "SourceDecoratorSize":
+                        Connector.SourceDecorator.Width = Connector.SourceDecorator.Height = Int64.Parse(Value);
+                        break;
+                    case "TargetDecoratorShape":
+                        switch (Value)
+                        {
+
+                            case "Arrow":
+                                Connector.TargetDecorator.Shape = DecoratorShape.Arrow;
+                                break;
+                            case "None":
+                                Connector.TargetDecorator.Shape = DecoratorShape.None;
+                                break;
+                            case "Diamond":
+                                Connector.TargetDecorator.Shape = DecoratorShape.Diamond;
+                                break;
+                            case "OpenArrow":
+                                Connector.TargetDecorator.Shape = DecoratorShape.OpenArrow;
+                                break;
+                            case "Circle":
+                                Connector.TargetDecorator.Shape = DecoratorShape.Circle;
+                                break;
+                            case "Square":
+                                Connector.TargetDecorator.Shape = DecoratorShape.Square;
+                                break;
+                            case "DoubleArrow":
+                                Connector.TargetDecorator.Shape = DecoratorShape.DoubleArrow;
+                                break;
+                            case "Fletch":
+                                Connector.TargetDecorator.Shape = DecoratorShape.Fletch;
+                                break;
+                            case "OpenFetch":
+                                Connector.TargetDecorator.Shape = DecoratorShape.OpenFletch;
+                                break;
+                            case "IndentedArrow":
+                                Connector.TargetDecorator.Shape = DecoratorShape.InArrow;
+                                break;
+                            case "OutdentedArrow":
+                                Connector.TargetDecorator.Shape = DecoratorShape.OutArrow;
+                                break;
+                        }
+                        break;
+                    case "TargetDecoratorSize":
+                        Connector.TargetDecorator.Width = Connector.TargetDecorator.Height = Int64.Parse(Value);
+                        break;
+                    case "Bridging":
+                        if (Value == "True")
+                        {
+                            Connector.Constraints |= ConnectorConstraints.Bridging;
+                        }
+                        else
+                        {
+                            Connector.Constraints &= ~ConnectorConstraints.Bridging;
+                        }
+                        break;
+                    case "BridgeSpace":
+                        Connector.BridgeSpace = Double.Parse(Value);
+                        break;
+                    case "Opacity":
+                        Connector.Style.Opacity = Connector.SourceDecorator.Style.Opacity = Connector.TargetDecorator.Style.Opacity = Double.Parse(Value);
+                        break;
+                }
+            }
+        }
+    }
+
+    public ObservableCollection<Connector> OnSelectedConnector()
+    {
+        ObservableCollection<Connector> ConnectorCollection = new ObservableCollection<Connector>();
+        SfDiagramComponent Diagram = Parent.DiagramContent.Diagram;
+        DiagramSelectionSettings SelectedItems = Diagram.SelectionSettings;
+        for (int i = 0; i < SelectedItems.Connectors.Count; i++)
+        {
+            ConnectorCollection.Add(SelectedItems.Connectors[i] as Connector);
+        }
+        return ConnectorCollection;
+    }
+    // Page Settings
+
+    /// <summary>
+    /// Method used to update the paper format of the Diagram.
+    /// </summary>
+    public async void OnPaperListValueChange(Syncfusion.Blazor.DropDowns.ChangeEventArgs<string, PaperListFields> args)
+    {
+        await OnUpdateDiagramProperties("PaperList", args.Value);
+    }
+    /// <summary>
+    /// Method used to update the portrait orientation
+    /// </summary>
+
+    public async void OnPagePortraitChange()
+    {
+        await OnUpdateDiagramProperties("PagePortrait", "");
+    }
+
+    /// <summary>
+    /// Method used to update the landscape orientation
+    /// </summary>
+
+    public async void OnPageLandscapeChange()
+    {
+        await OnUpdateDiagramProperties("PageLandscape", "");
+    }
+
+    /// <summary>
+    /// Method used to update the background color of the Diagram
+    /// </summary>
+    public async void OnPageBgColorChange(ColorPickerEventArgs args)
+    {
+        await OnUpdateDiagramProperties("PageBgColor", args.CurrentValue.Hex);
+        PageBgColorValue = args.CurrentValue.Hex;
+    }
+
+    /// <summary>
+    /// Method used to update the page breaks
+    /// </summary>
+
+    public async void OnShowPageBreaksChange(Microsoft.AspNetCore.Components.ChangeEventArgs args)
+    {
+        if (args?.Value != null)
+        {
+            await OnUpdateDiagramProperties("ShowPageBreaks", args.Value?.ToString() ?? "");
+        }
+    }
+
+    /// <summary>
+    /// Method used to update the page width
+    /// </summary>
+
+    public async void OnPageWidthChange(Syncfusion.Blazor.Inputs.ChangeEventArgs<double> args)
+    {
+        PageWidth = args.Value;
+        await OnUpdateDiagramProperties("PageWidth", args.Value.ToString());
+    }
+
+    /// <summary>
+    /// Method used to update the page height.
+    /// </summary>
+
+    public async void OnPageHeightChange(Syncfusion.Blazor.Inputs.ChangeEventArgs<double> args)
+    {
+        PageHeight = args.Value;
+        await OnUpdateDiagramProperties("PageHeight", args.Value.ToString());
+    }
+    public void CustomPageSettingsChange(bool Value)
+    {
+        if(Value)
+        {
+            PageDimensionVisibility = "block";
+            PageOrientationVisibility = "block";
+        }
+        else
+        {
+            PageDimensionVisibility = "none";
+            PageOrientationVisibility = "block";
+        }
+    }
+
+    /// <summary>
+    /// Method used to update the Diaram properties.
+    /// </summary>
+    public async Task OnUpdateDiagramProperties(string prop, string Value)
+    {
+        SfDiagramComponent Diagram = Parent.DiagramContent.Diagram;
+        Diagram.BeginUpdate();
+        if (!PreventPropertyChange)
+        {
+            switch (prop)
+            {
+                case "PageWidth":
+                    Parent.DiagramContent.DiagramPageWidth = Double.Parse(Value);
+                    break;;
+                case "PageHeight":
+                    Parent.DiagramContent.DiagramPageHeight = Double.Parse(Value);
+                    break;
+                case "PaperList":
+                    double PageWidth;
+                    double PageHeight;
+                    if (Value == "Custom")
+                    {
+                        CustomPageSettingsChange(true);
+                    }
+                    else
+                    {
+                        CustomPageSettingsChange(false);
+                        PaperSize paperSize = GetPaperSize(Value);
+                        PageWidth = paperSize.PageWidth;
+                        PageHeight = paperSize.PageHeight;
+                        if (PageWidth > 0 && PageHeight > 0)
+                        {
+                            if (Diagram.PageSettings.Orientation == PageOrientation.Portrait)
+                            {
+                                if (PageWidth > PageHeight)
+                                {
+                                    double temp = PageWidth;
+                                    PageWidth = PageHeight;
+                                    PageHeight = temp;
+                                }
+                            }
+                            else
+                            {
+                                if (PageHeight > PageWidth)
+                                {
+                                    double temp = PageHeight;
+                                    PageHeight = PageWidth;
+                                    PageWidth = temp;
+                                }
+                            }
+                        }
+                        Parent.DiagramContent.DiagramPageWidth = PageWidth;
+                        Parent.DiagramContent.DiagramPageHeight = PageHeight;
+                    }
+                    Parent.MenuBar.UpdateSelectedMenuBarItem(Value);
+                    Parent.MenuBar.RemoveSelectedMenuBarItem(Value);
+                    Parent.MenuBar.StateChanged();
+                    break;
+                case "PageLandscape":
+                    Parent.DiagramContent.DiagramOrientation = PageOrientation.Landscape;  
+                    Parent.DiagramContent.StateChanged();
+                    landscapeStyleClass = "e-control e-btn e-lib e-flat e-primary e-active";
+                    portraitStyleClass = "e-control e-btn e-lib e-flat e-primary";
+                    Parent.MenuBar.DesignMenuItems[0].Items[0].IconCss = "sf-icon-Selection";
+                    Parent.MenuBar.DesignMenuItems[0].Items[1].IconCss = "sf-icon-blank";
+                    break;
+                case "PagePortrait":
+                    Parent.DiagramContent.DiagramOrientation = PageOrientation.Portrait;
+                    Parent.DiagramContent.StateChanged();
+                    portraitStyleClass = "e-control e-btn e-lib e-flat e-primary e-active";
+                    landscapeStyleClass = "e-control e-btn e-lib e-flat e-primary";
+                    Parent.MenuBar.DesignMenuItems[0].Items[1].IconCss = "sf-icon-Selection";
+                    Parent.MenuBar.DesignMenuItems[0].Items[0].IconCss = "sf-icon-blank";
+                    break;
+                case "PageBgColor":
+                    Parent.DiagramContent.DiagramBgColor = Value;
+                    break;
+                case "ShowPageBreaks":
+                    Parent.DiagramContent.DiagramShowPageBreaks = (Value == "True") ? true : false;
+                    Parent.DiagramContent.StateChanged();
+                    Parent.MenuBar.ViewMenuItems[3].IconCss = Parent.MenuBar.ViewMenuItems[3].IconCss == "sf-icon-blank" ? "sf-icon-Selection" : "sf-icon-blank";
+                    break;
+            }
+        }
+        await Diagram.EndUpdate();
+    }
+
+    /// <summary>
+    /// Gets the size of the paper
+    /// </summary>
+    public PaperSize GetPaperSize(string paperName) {
+
+        PaperSize Paper = new PaperSize();
+
+        switch (paperName) {
+            case "Letter":
+                Paper.PageWidth = 816;
+                Paper.PageHeight = 1056;
+                break;
+            case "Legal":
+                Paper.PageWidth = 816;
+                Paper.PageHeight = 1344;
+                break;
+            case "Tabloid":
+                Paper.PageWidth = 1056;
+                Paper.PageHeight = 1632;
+                break;
+            case "A3":
+                Paper.PageWidth = 1122;
+                Paper.PageHeight = 1587;
+                break;
+            case "A4":
+                Paper.PageWidth = 793;
+                Paper.PageHeight = 1122;
+                break;
+            case "A5":
+                Paper.PageWidth = 559;
+                Paper.PageHeight = 793;
+                break;
+            case "A6":
+                Paper.PageWidth = 396;
+                Paper.PageHeight = 559;
+                break;
+        }
+        return Paper;
+    }
+
+    public class PaperSize
+    {
+        public double PageWidth { get; set; }
+        public double PageHeight { get; set; }
+    }       
+   
+}

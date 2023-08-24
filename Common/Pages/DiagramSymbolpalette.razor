@@ -1,0 +1,110 @@
+@using Syncfusion.Blazor.Navigations
+@using Syncfusion.Blazor.Diagram
+@using Syncfusion.Blazor.Diagram.SymbolPalette
+@using System.Collections.ObjectModel
+@using BPMNEditor.Shared
+
+@namespace BPMNEditor
+
+<div class="db-palette-parent">
+
+    <SfSymbolPaletteComponent @ref="@PaletteInstance" Width="100%" Height="100%" SymbolHeight="@symbolSizeHeight" SymbolWidth="@symbolSizeWidth" GetSymbolInfo="GetSymbolInfo"
+                     Palettes="@Palettes" SymbolDragPreviewSize="@SymbolPreview" SymbolMargin="@SymbolMargin">                 
+    </SfSymbolPaletteComponent>
+</div>
+
+@code {
+    internal DiagramLeftSideBar Parent { get; set; }
+
+    SfSymbolPaletteComponent? PaletteInstance { get; set; }
+
+    /// <summary>
+    /// Gets or sets the symbol preview size for an item in the Symbol Palette.
+    /// </summary>
+
+    DiagramSize SymbolPreview = new DiagramSize();
+    /// <summary>
+    /// Gets or sets the symbol preview margin for an item in the Symbol Palette.
+    /// </summary>
+    SymbolMargin SymbolMargin = new SymbolMargin { Left = 10, Right = 15, Top = 15, Bottom = 10 };
+    /// <summary>
+    /// Gets or sets the symbol width for an item in the Symbol Palette.
+    /// </summary>
+    double symbolSizeWidth;
+    /// <summary>
+    /// Gets or sets the symbol height for an item in the Symbol Palette.
+    /// </summary>
+    double symbolSizeHeight;
+    /// <summary>
+    /// Reference to the palettes in the symbol palette
+    /// </summary>
+    DiagramObjectCollection<Palette>? Palettes { get; set; }
+    /// <summary>
+    /// Reference to the Symbol palette
+    /// </summary>
+    public Palette? BpmnShapePalette { get; set; }
+    /// <summary>
+    /// Gets or sets the BPMN shape symbols.
+    /// </summary>
+    public DiagramObjectCollection<NodeBase> BPMNShapeSymbols { get; set; } = new DiagramObjectCollection<NodeBase>();
+
+
+    protected override void OnInitialized()
+    {
+
+        symbolSizeWidth = 60;
+        symbolSizeHeight = 50;   
+        SymbolPreview = new DiagramSize();
+        SymbolPreview.Width = 50;
+        SymbolPreview.Height = 50;
+        //Initializes the palette
+        InitializePalettes();
+        BpmnShapePalette = new Palette() { Symbols = BPMNShapeSymbols, Title = "BPMN Shapes", ID = "BPMN Shapes", IconCss = "e-ddb-icons e-flow" };
+        Palettes = new DiagramObjectCollection<Palette>();
+        if (Palettes != null && BpmnShapePalette != null)
+        {
+            Palettes.Add(BpmnShapePalette);
+        }
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (PaletteInstance != null)
+        {
+            PaletteInstance.Targets = new DiagramObjectCollection<SfDiagramComponent>() { };
+        }
+        var diagramContent = Parent?.Parent?.DiagramContent;
+        if (diagramContent != null)
+        {
+            if (PaletteInstance != null)
+            {
+                PaletteInstance.Targets.Add(diagramContent.Diagram);
+            }
+        }
+        if (firstRender)
+        {         
+            await Task.Delay(1).ConfigureAwait(true);
+        }
+    }
+    /// <summary>
+    /// This method provides the symbol information
+    /// </summary>
+
+    private SymbolInfo GetSymbolInfo(IDiagramObject symbol)
+    {
+        SymbolInfo SymbolInfo = new SymbolInfo();
+        SymbolInfo.Fit = true;
+        string text = "";
+        if (symbol != null)
+        {
+            if (symbol is Node node)
+            {
+                text = (node.Shape as Shape).Type.ToString() + node.ID;
+            }
+            else if (symbol is Connector connector)
+            {
+                text = "connectors" + connector.ID;
+            }
+        }
+        return SymbolInfo;
+    }
+}
