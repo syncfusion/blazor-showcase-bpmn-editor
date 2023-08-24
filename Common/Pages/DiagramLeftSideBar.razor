@@ -1,0 +1,36 @@
+@namespace BPMNEditor
+
+<div class=@SideBarClassName style="display: @sidebarVisibility">
+    <DiagramSymbolpalette @ref="@DiagramSymbolpalette"></DiagramSymbolpalette>
+</div>
+
+@code {
+        public DiagramMain? Parent { get; set; }
+
+    /// <summary>
+    /// Gets or sets the CSS class applied to the sidebar element in the application.
+    /// </summary>
+    public string SideBarClassName = "sidebar show-overview";
+    /// <summary>
+    /// Gets or sets a value indicating the visibility state of the sidebar in the application's user interface.
+    /// </summary>
+    public string sidebarVisibility = "block;";
+
+
+        public DiagramSymbolpalette? DiagramSymbolpalette { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+        if (firstRender)
+        {
+            if (this.DiagramSymbolpalette != null)
+                this.DiagramSymbolpalette.Parent = this;           
+        }
+    }
+
+    public void StateChanged()
+    {
+        StateHasChanged();
+    }
+}
