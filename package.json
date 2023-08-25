@@ -1,17 +1,19 @@
 {
-	"name": "diagram-builder",
+	"name": "bpmn-editor",
 	"version": "1.0.0",
-	"description": "Blazor Showcase Samples - DiagramBuilder",
+	"description": "Blazor Showcase Samples - BPMN Viewer and Editor",
 	"author": "Syncfusion Inc.",
 	"license": "SEE LICENSE IN license",
 	"keywords": [
-		"blazor-diagram-builder",
-		"diagram-builder",
-		"diagrambuilder"
+		"bpmneditor",
+		"bpmn-editor",
+		"bpmn-viewer-editor",
+		"blazor-bpmn-editor",
+		"blazor-wasm-bpmn-editor"
 	],
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/essential-studio/ej2-blazor-diagram-builder.git"
+		"url": "https://github.com/syncfusion/blazor-showcase-bpmn-editor.git" 
 	},
 	"devDependencies": {
 		"json-beautify": "^1.0.1",
