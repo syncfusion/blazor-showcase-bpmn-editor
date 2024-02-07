@@ -18,6 +18,7 @@ The samples require the following requirements to run.
 
 ## Demo
 
-### <a href="https://blazor.syncfusion.com/showcase/diagrambuilder/" target="_blank">https://blazor.syncfusion.com/showcase/diagrambuilder/</a>
+### Server - <a href="https://blazor.syncfusion.com/showcase/bpmn-editor/" target="_blank">https://blazor.syncfusion.com/showcase/bpmn-editor/</a>
+### WebAssembly - <a href="https://blazor.syncfusion.com/showcase/wasm/bpmn-editor/" target="_blank">https://blazor.syncfusion.com/showcase/wasm/bpmn-editor/</a>
 
 Check all the showcase samples from <a href="https://blazor.syncfusion.com" target="_blank">here</a>.
