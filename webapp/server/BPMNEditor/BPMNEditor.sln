@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34310.174
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BPMNEditor", "BPMNEditor.csproj", "{B08727D3-D654-467C-AF7B-53DC006FEFF1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorServerCommon_NET8", "..\..\..\common\BlazorServerCommon_NET8.csproj", "{062A42CC-E83E-4EF6-9DD3-D3377FC17B4F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B08727D3-D654-467C-AF7B-53DC006FEFF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B08727D3-D654-467C-AF7B-53DC006FEFF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B08727D3-D654-467C-AF7B-53DC006FEFF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B08727D3-D654-467C-AF7B-53DC006FEFF1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{062A42CC-E83E-4EF6-9DD3-D3377FC17B4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{062A42CC-E83E-4EF6-9DD3-D3377FC17B4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{062A42CC-E83E-4EF6-9DD3-D3377FC17B4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{062A42CC-E83E-4EF6-9DD3-D3377FC17B4F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {06A32068-DBA9-4582-81B1-E44E1C467978}
+	EndGlobalSection
+EndGlobal
