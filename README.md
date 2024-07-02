@@ -12,9 +12,15 @@ The samples require the following requirements to run.
 
 ### Run
 
-* Clone this repository.
-* Open the project in Visual Studio 2022.
-* Run the demo.
+#### Server app:
+1. Clone this repository.
+2. Open the `.csproj` file in VS 2022.
+3. Click the green run button in the toolbar.
+
+#### WASM app:
+1. Clone this repository.
+2. Open the `.sln` file in VS 2022.
+3. Click the green run button in the toolbar.
 
 ## Demo
 
