@@ -1,8 +1,0 @@
-Server/BPMNEditor/bin
-Server/BPMNEditor/obj
-WASM/BPMNEditor//bin
-WASM/BPMNEditor//obj
-Common/BlazorServerCommon_NET6/bin
-Common/BlazorWasmCommon_NET6/obj
-.vs/
-.git/
