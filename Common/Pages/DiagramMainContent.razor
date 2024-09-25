@@ -4229,7 +4229,7 @@
                 sfDiagram.StartGroupAction();
                 sfDiagram.BeginUpdate();
                 sfDiagram.Nodes.Remove(deleteObject);
-                _ = sfDiagram.EndUpdateAsync();
+                _ = sfDiagram.EndUpdate();
                 sfDiagram.EndGroupAction();
             }
             base.OnMouseUp(args);
@@ -4578,7 +4578,7 @@
     /// <param name="Json">The JSON representation of the diagram to load.</param>
     public void LoadNewDiagram(string Json)
     {
-        _= Diagram.LoadDiagramAsync(Json);
+        _= Diagram.LoadDiagram(Json);
     }
 
     /// <summary>
@@ -4595,7 +4595,7 @@
             HorizontalSpacing = value;
         else if (type == "Vertical")
             VerticalSpacing = value;
-        await diagram.EndUpdateAsync();
+        await diagram.EndUpdate();
     }
     /// <summary>
     /// Updates the alignment of selected objects in the diagram.
@@ -4626,7 +4626,7 @@
                 verticalAlignment = VerticalAlignment.Bottom;
                 break;
         }
-        await diagram.EndUpdateAsync();
+        await diagram.EndUpdate();
     }
     public void Dispose()
     {
