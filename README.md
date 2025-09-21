@@ -1,28 +1,76 @@
 [![.NET](https://github.com/syncfusion/blazor-showcase-bpmn-editor/actions/workflows/dotnet.yml/badge.svg)](https://github.com/syncfusion/blazor-showcase-bpmn-editor/actions/workflows/dotnet.yml)
 
-# blazor-showcase-bpmn-editor
+# Essential Studio® for Blazor - BPMN Editor
 The BPMN shapes help us to represent internal business processes in a graphical notation. They enable you to communicate procedures in a standard manner. These shapes are popular and intuitive graphics that can be easily understood by all business stakeholders, including business users, business analysts, software developers, and data architects.
 
-## Deployment
+## Requirements to run the demo
 
-### Requirements to run the demo
+* [System requirements](https://blazor.syncfusion.com/documentation/system-requirements/)
 
-The samples require the following requirements to run.
+* [NET 8 WebAssembly Workload](https://learn.microsoft.com/en-us/aspnet/core/blazor/webassembly-build-tools-and-aot?view=aspnetcore-8.0#net-webassembly-build-tools)
 
-* [Visual Studio 2022](https://visualstudio.microsoft.com/vs/)
-* [.NET 8.0](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
+## How to run the demo
 
-### Run
+Clone the repository.This repository contains Blazor BPMN Editor Server app, Blazor BPMN Editor WASM app.
+* `webapp/server` folder has solution and project files to run BPMN Editor server app.
+* `webapp/Wasm` folder has solution and project files to run BPMN Editor WebAssembly app.
+* The Common folder contains all the common files (i.e., samples, static web assets, resources) which are applicable for Blazor BPMN Editor Server App and Blazor BPMN Editor WASM App.
 
-1. Clone this repository.
-2. Open the project in VS 2022:
-	- For the .NET 8 Server app, open Server/BPMNEditor.sln.
-	- For the .NET 8 WASM app, open WASM/BPMNEditor.sln.
-3. Run the demo.
+### Run the demo using .NET CLI
 
-## Demo
+* Open the command prompt from the demo's directory.
+* Run the demo using the following command.
+   
+   To run .NET 8 BPMN Editor Server project
+   > `dotnet run --project webapp/server/BPMNEditor.csproj`
 
-### Server - <a href="https://blazor.syncfusion.com/showcase/bpmn-editor/" target="_blank">https://blazor.syncfusion.com/showcase/bpmn-editor/</a>
-### WebAssembly - <a href="https://blazor.syncfusion.com/showcase/wasm/bpmn-editor/" target="_blank">https://blazor.syncfusion.com/showcase/wasm/bpmn-editor/</a>
+   To run .NET 8 BPMN Editor WASM project
+   > `dotnet run --project webapp/wasm/BPMNEditor.sln`
 
-Check all the showcase samples from <a href="https://blazor.syncfusion.com" target="_blank">here</a>.
+### Run the demo using Visual Studio
+
+* Open the solution file using Visual Studio.
+* Press `Ctrl + F5` to run the demo.
+
+### Run the demo using Visual Studio code
+
+* Open the Visual Studio code from the Demo directory where the project file is present.
+
+* Press `Ctrl + F5` to run the demo.
+
+## Live Demo
+
+#### Server - <a href="https://blazor.syncfusion.com/showcase/bpmn-editor/" target="_blank">BPMN Editor Server live Demo</a>
+### WebAssembly - <a href="https://blazor.syncfusion.com/showcase/wasm/bpmn-editor/" target="_blank">BPMN Editor Wasm live Demo</a>
+
+Check all the showcase samples from <a href="https://www.syncfusion.com/showcase-apps" target="_blank">here</a>.
+
+## License
+
+Syncfusion® Blazor Components is available under the Syncfusion® Essential Studio program, and can be licensed either under the Syncfusion® Community License Program or the Syncfusion commercial license.
+
+To be qualified for the Syncfusion® Community License Program, you must have gross revenue of less than one (1) million U.S. dollars (USD 1,000,000.00) per year and have less than five (5) developers in your organization, and agree to be bound by Syncfusion's terms and conditions.
+
+Customers who do not qualify for the community license can contact sales@syncfusion.com for commercial licensing options.
+
+You may not use this product without first purchasing a Community License or a Commercial License, as well as agreeing to and complying with Syncfusion's license terms and conditions.
+
+The Syncfusion® license that contains the terms and conditions can be found at
+[https://www.syncfusion.com/content/downloads/syncfusion_license.pdf](https://www.syncfusion.com/content/downloads/syncfusion_license.pdf)
+
+## Support and feedback
+
+* For any other queries, reach the [Syncfusion® support team](https://support.syncfusion.com/) or post the queries through the [community forums](https://www.syncfusion.com/forums?utm_source=github&utm_medium=listing&utm_campaign=blazor-samples).
+
+* To renew the subscription, click [here](https://www.syncfusion.com/sales/products?utm_source=github&utm_medium=listing&utm_campaign=blazor-samples) or contact our sales team at <salessupport@syncfusion.com>.
+
+* Don't see what you need? Please request it in our [feedback portal](https://www.syncfusion.com/feedback/blazor-components).
+
+## See also
+
+* [Blazor Documentation](https://blazor.syncfusion.com/documentation/introduction)
+* [Blazor Components](https://www.syncfusion.com/blazor-components)
+* [Blazor Live Demos - Server](https://blazor.syncfusion.com/demos/)
+* [Blazor Live Demos - WebAssembly](https://blazor.syncfusion.com/wasm/demos/)
+* [Blazor Playground](https://blazorplayground.syncfusion.com/)
+* [Blazor Smart/AI Samples](https://github.com/syncfusion/smart-ai-samples)  
