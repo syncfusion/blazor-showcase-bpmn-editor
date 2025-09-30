@@ -41,7 +41,7 @@ Clone the repository.This repository contains Blazor BPMN Editor Server app, Bla
 ## Live Demo
 
 #### Server - <a href="https://blazor.syncfusion.com/showcase/bpmn-editor/" target="_blank">BPMN Editor Server live Demo</a>
-### WebAssembly - <a href="https://blazor.syncfusion.com/showcase/wasm/bpmn-editor/" target="_blank">BPMN Editor Wasm live Demo</a>
+#### WebAssembly - <a href="https://blazor.syncfusion.com/showcase/wasm/bpmn-editor/" target="_blank">BPMN Editor Wasm live Demo</a>
 
 Check all the showcase samples from <a href="https://www.syncfusion.com/showcase-apps" target="_blank">here</a>.
 
