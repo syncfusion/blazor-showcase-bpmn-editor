@@ -7,7 +7,7 @@ The BPMN shapes help us to represent internal business processes in a graphical 
 
 * [System requirements](https://blazor.syncfusion.com/documentation/system-requirements/)
 
-* [NET 8 WebAssembly Workload](https://learn.microsoft.com/en-us/aspnet/core/blazor/webassembly-build-tools-and-aot?view=aspnetcore-8.0#net-webassembly-build-tools)
+* [NET 10 WebAssembly Workload](https://learn.microsoft.com/en-us/aspnet/core/blazor/webassembly-build-tools-and-aot?view=aspnetcore-10.0#net-webassembly-build-tools)
 
 ## How to run the demo
 
@@ -21,10 +21,10 @@ Clone the repository.This repository contains Blazor BPMN Editor Server app, Bla
 * Open the command prompt from the demo's directory.
 * Run the demo using the following command.
    
-   To run .NET 8 BPMN Editor Server project
+   To run .NET 10 BPMN Editor Server project
    > `dotnet run --project webapp/server/BPMNEditor.csproj`
 
-   To run .NET 8 BPMN Editor WASM project
+   To run .NET 10 BPMN Editor WASM project
    > `dotnet run --project webapp/wasm/BPMNEditor.sln`
 
 ### Run the demo using Visual Studio

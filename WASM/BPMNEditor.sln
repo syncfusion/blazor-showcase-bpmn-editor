@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BPMNEditor", "BPMNEditor\BP
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BPMNEditor.Client", "BPMNEditor.Client\BPMNEditor.Client.csproj", "{71CD9CC0-BEDF-4C61-91FC-7C21EE55D923}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorWasmCommon_NET8", "..\common\BlazorWasmCommon_NET8.csproj", "{92C15E39-C42B-4EF5-899D-E0BFE971D4FE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorWasmCommon_NET10", "..\Common\BlazorWasmCommon_NET10.csproj", "{92C15E39-C42B-4EF5-899D-E0BFE971D4FE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
