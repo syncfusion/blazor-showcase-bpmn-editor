@@ -45,23 +45,22 @@
     <meta name="description" content="BPMN (Business Process Model and Notation) shapes are used to represent the internal business procedure in a graphical notation and enable you to communicate the procedures in a standard manner.">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <link href=@Urihelper.Uri rel="canonical" />
+    <ResourcePreloader />
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <!-- Used for Property panel -->
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
     <!-- To include the need theme -->
-    <link href="_content/Syncfusion.Blazor/styles/fluent.css" rel="stylesheet" />
+    <link href="_content/Syncfusion.Blazor/styles/fluent2.css" rel="stylesheet" />
     <!-- To choose the proper font family -->
     <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
-    <!-- To refer the icons for the sample -->
-    <link href="_content/BlazorServerCommon_NET8/assets/db-icons1/style.css" rel="stylesheet" />
-    <link href="_content/BlazorServerCommon_NET8/assets/dbstyle/diagrambuilder.css" rel="stylesheet" />
-    <script src="_content/BlazorServerCommon_NET8/interop.js" async></script>
-    <script src="_content/Syncfusion.Blazor/scripts/syncfusion-blazor.min.js" type="text/javascript"></script>
-    <HeadOutlet @rendermode="@InteractiveServer" />
+    <link href="@Assets["_content/BlazorServerCommon_NET10/assets/db-icons1/style.css"]" rel="stylesheet" />
+    <link href="@Assets["_content/BlazorServerCommon_NET10/assets/dbstyle/diagrambuilder.css"]" rel="stylesheet" />
+    <script src="@Assets["_content/BlazorServerCommon_NET10/interop.js"]" async></script>
+    <HeadOutlet @rendermode="InteractiveServer" />
 </head>
 
 <body>
-    <Routes @rendermode="@InteractiveServer" />
+    <Routes @rendermode="InteractiveServer" />
     <!-- Google Tag Manager (noscript) -->
     <!--Page Load-->
     <noscript>
@@ -80,7 +79,9 @@
 
         </environment>
     </div>
-    <script src="_framework/blazor.web.js"></script>
+    <ReconnectModal />
+    <script src="@Assets["_content/Syncfusion.Blazor/scripts/syncfusion-blazor.min.js"]" type="text/javascript"></script>
+    <script src="@Assets["_framework/blazor.web.js"]"></script>
 </body>
 
 </html>
