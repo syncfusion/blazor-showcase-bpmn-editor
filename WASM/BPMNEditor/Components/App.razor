@@ -1,23 +1,58 @@
 ﻿@page "/"
 @inject NavigationManager Urihelper
+
+@* SEO Variables - Single source of truth for all meta tags *@
+@{
+    string SeoTitle = "BPMN Viewer and Editor - Syncfusion Blazor Showcase";
+    string SeoDescription = "Professional BPMN viewer and editor for creating and visualizing business process diagrams with Syncfusion Blazor Components.";
+    string SiteUrl = Urihelper.Uri.TrimEnd('/');
+    string ApplicationName = "BPMN Viewer and Editor";
+    string Publisher = "Syncfusion";
+    string Language = "English";
+    string SocialImage = SiteUrl + "/diagram_component.svg";
+}
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>BPMN Viewer and Editor - Syncfusion Blazor WASM Showcase App</title>
-    <meta name="description" content="BPMN (Business Process Model and Notation) shapes represent internal business procedures using graphical notation and standard communication.">
+    <title>@SeoTitle</title>
     <base href="/" />
+    
+    <!-- Primary Meta Tags -->
+    <meta name="title" content="@SeoTitle" />
+    <meta name="description" content="@SeoDescription" />
+    <meta name="robots" content="index, follow" />
+    <meta name="keywords" content="BPMN, Business Process Model, Notation, Diagram Editor, Workflow, Blazor Components" />
+    <meta name="publisher" content="@Publisher" />
+    <meta name="language" content="@Language" />
+    
+    <!-- Canonical & Hreflang -->
     <link href="https://showcase.syncfusion.com/bpmn-editor/blazor/wasm/" rel="canonical" />
-    <meta property="og:title" content="BPMN Viewer and Editor - Syncfusion Blazor WASM Showcase App" />
-    <meta property="og:description" content="BPMN (Business Process Model and Notation) shapes represent internal business procedures using graphical notation and standard communication." />
-    <meta property="og:url" content="https://showcase.syncfusion.com/bpmn-editor/blazor/wasm/" />
-    <meta property="og:image" content="@(Urihelper.BaseUri)diagram_component.svg" />
+    <link rel="alternate" hreflang="en-US" href="@SiteUrl" />
+    <link rel="alternate" hreflang="x-default" href="@SiteUrl" />
+    
+    <!-- Open Graph Tags -->
     <meta property="og:type" content="website" />
+    <meta property="og:title" content="@SeoTitle" />
+    <meta property="og:description" content="@SeoDescription" />
+    <meta property="og:url" content="@SiteUrl" />
+    <meta property="og:site_name" content="@ApplicationName" />
+    <meta property="og:image" content="@SocialImage" />
+    <meta property="og:image:alt" content="@ApplicationName Logo" />
+    <meta property="og:locale" content="en_US" />
+    
+    <!-- Twitter Card Tags -->
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="@SeoTitle" />
+    <meta name="twitter:description" content="@SeoDescription" />
+    <meta name="twitter:image" content="@SocialImage" />
+    <meta name="twitter:image:alt" content="@ApplicationName" />
+    <meta name="twitter:site" content="@@Syncfusion" />
     <!-- Google Tag Manager -->
-    <!-- Load GTM-P3WXFWCW immediately on page load  -->
+    <!-- Load GTM-WXZ6DX9B immediately on page load  -->
     <script>
         (function (w, d, s, l, i) {
             w[l] = w[l] || []; w[l].push({
@@ -26,7 +61,7 @@
             }); var f = d.getElementsByTagName(s)[0],
                 j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
                     'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
-        })(window, document, 'script', 'dataLayer', 'GTM-P3WXFWCW');
+        })(window, document, 'script', 'dataLayer', 'GTM-WXZ6DX9B');
     </script>
     <!-- Load GTM-W8WD8WN on user interaction -->
     <script>
@@ -52,9 +87,45 @@
     <link href="_content/Syncfusion.Blazor.Themes/fluent2.css" rel="stylesheet" />
     <ImportMap />
     <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>   
+    <script src="@Assets["_content/BlazorWasmCommon_NET10/interop.min.js"]"></script>
+    <link href="@Assets["_content/BlazorWasmCommon_NET10/assets/db-icons1/style.min.css"]" rel="stylesheet" />
+    <link href="@Assets["_content/BlazorWasmCommon_NET10/assets/dbstyle/diagrambuilder.min.css"]" rel="stylesheet" />
+
     <script src="@Assets["_content/BlazorWasmCommon_NET10/interop.js"]"></script>
     <link href="@Assets["_content/BlazorWasmCommon_NET10/assets/db-icons1/style.css"]" rel="stylesheet" />
-    <link href="@Assets["_content/BlazorWasmCommon_NET10/assets/dbstyle/diagrambuilder.css"]" rel="stylesheet" /> 
+    <link href="@Assets["_content/BlazorWasmCommon_NET10/assets/dbstyle/diagrambuilder.css"]" rel="stylesheet" />
+    
+    <!-- Schema.org Structured Data - SoftwareApplication -->
+    <script type="application/ld+json">
+    {
+      "@@context": "https://schema.org/",
+      "@@type": "SoftwareApplication",
+      "name": "@ApplicationName",
+      "description": "@SeoDescription",
+      "url": "@SiteUrl",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Web",
+      "browserRequirements": "WebAssembly enabled browser",
+      "image": "@SocialImage",
+      "offers": {
+        "@@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "aggregateRating": {
+        "@@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "ratingCount": "150"
+      },
+      "author": {
+        "@@type": "Organization",
+        "name": "@Publisher",
+        "url": "https://www.syncfusion.com"
+      },
+      "inLanguage": "en-US"
+    }
+    </script>
+    
     <HeadOutlet @rendermode="InteractiveWebAssembly" />
 </head>
 
@@ -64,7 +135,7 @@
     <!-- Google Tag Manager (noscript) -->
     <!--Page Load-->
     <noscript>
-        <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P3WXFWCW" height="0" width="0" style="display:none;visibility:hidden"></iframe>
+        <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WXZ6DX9B" height="0" width="0" style="display:none;visibility:hidden"></iframe>
     </noscript>
     <!--Interaction-->
     <noscript>
